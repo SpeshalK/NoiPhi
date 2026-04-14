@@ -1,2 +1,2 @@
 # NoiPhi
-A stochastic simulation package for qauntum noise in python
+A stochastic simulation package for qauntum laser noise in python
