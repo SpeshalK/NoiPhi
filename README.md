@@ -17,7 +17,7 @@ NoiPhi is a Python package for generating physically realistic noise trajectorie
 
 ## Background
 
-The TK95 algorithm (Timmer & König, 1995) generates stochastic time series whose statistical properties exactly match a given PSD. This makes it particularly well-suited to simulating coloured noise — such as laser phase noise — where the spectral shape is known from experiment but the temporal realisation is random.
+The TK95 algorithm (Timmer & König, 1995) generates stochastic time series whose statistical properties exactly match a given PSD. This makes it particularly well-suited to simulating coloured noise, such as laser phase noise, where the spectral shape is known from experiment but the temporal realisation is random.
 
 NoiPhi applies this approach to quantum simulation contexts, where accurate noise modelling is critical for predicting decoherence, heating rates, and other environmentally driven dynamics.
 
