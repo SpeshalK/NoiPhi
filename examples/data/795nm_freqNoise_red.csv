@@ -5,7 +5,7 @@
 # DOI: https://doi.org/10.1103/PhysRevA.97.053803
 # Note: This data corresponds to the frequency noise spectral density 
 #       characterizing the 795nm laser used for 5S1/2 -> 5P1/2 excitation.
-#frequency_hz,psd_Hz^2/Hz
+# frequency_hz,psd_Hz^2/Hz
 10.0,1.2e-9
 31120.436889674605, 2.839126303960568
 32288.840781810915, 2.87186781825797

@@ -21,4 +21,4 @@ s_freq=redLaserData[:,1]
 s_phase= frequency_to_phase_psd(frequencies,s_freq)
 
 #Generate Noise simulation
-sim = noiphi.NoiseSimulator(frequencies, psd, dt, n_samples)
+sim = noiphi.NoiseSimulator(frequencies, s_phase, dt, n_samples)
