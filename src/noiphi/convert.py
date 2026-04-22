@@ -1,41 +1,5 @@
 import numpy as np
 
-def pdh_discriminator_slope(frequencies, k0, delta_f_fwhm):
-    """
-    Computes the frequency-dependent PDH discriminator slope k(f).
-
-    At Fourier frequencies above the cavity linewidth, the field stored in
-    the cavity can no longer follow the incident field fluctuations. The
-    discriminator slope therefore rolls off with frequency according to
-    equation (2) of Schmid et al. (2021):
-
-        k(f) = k0 / sqrt(1 + 4 * (f / delta_f_fwhm)^2)
-
-    Parameters
-    ----------
-    frequencies : ndarray
-        Fourier frequency array (Hz). Must be positive.
-    k0 : float
-        DC discriminator slope (V/Hz), measured at low Fourier frequencies.
-    delta_f_fwhm : float
-        FWHM linewidth of the reference cavity (Hz).
-
-    Returns
-    -------
-    k : ndarray
-        Frequency-dependent discriminator slope (V/Hz), same shape as
-        `frequencies`.
-
-    References
-    ----------
-    Schmid, F. et al. (2021). Simple phase noise measurement scheme for
-    cavity-stabilized laser systems. Optics Letters.
-    https://doi.org/10.1364/OL.44.002709
-    """
-    frequencies = np.asarray(frequencies, dtype=float)
-    return k0 / np.sqrt(1 + 4 * (frequencies / delta_f_fwhm) ** 2)
-
-
 def frequency_to_phase_psd(frequencies, S_nu):
     """
     Converts a frequency noise PSD to a phase noise PSD.
@@ -136,6 +100,41 @@ def voltage_to_phase_psd(frequencies, S_V, k0, delta_f_fwhm):
     S_V = np.asarray(S_V, dtype=float)
     k = pdh_discriminator_slope(frequencies, k0, delta_f_fwhm)
     return S_V / (frequencies ** 2 * k ** 2)
+
+def pdh_discriminator_slope(frequencies, k0, delta_f_fwhm):
+    """
+    Computes the frequency-dependent PDH discriminator slope k(f).
+
+    At Fourier frequencies above the cavity linewidth, the field stored in
+    the cavity can no longer follow the incident field fluctuations. The
+    discriminator slope therefore rolls off with frequency according to
+    equation (2) of Schmid et al. (2021):
+
+        k(f) = k0 / sqrt(1 + 4 * (f / delta_f_fwhm)^2)
+
+    Parameters
+    ----------
+    frequencies : ndarray
+        Fourier frequency array (Hz). Must be positive.
+    k0 : float
+        DC discriminator slope (V/Hz), measured at low Fourier frequencies.
+    delta_f_fwhm : float
+        FWHM linewidth of the reference cavity (Hz).
+
+    Returns
+    -------
+    k : ndarray
+        Frequency-dependent discriminator slope (V/Hz), same shape as
+        `frequencies`.
+
+    References
+    ----------
+    Schmid, F. et al. (2021). Simple phase noise measurement scheme for
+    cavity-stabilized laser systems. Optics Letters.
+    https://doi.org/10.1364/OL.44.002709
+    """
+    frequencies = np.asarray(frequencies, dtype=float)
+    return k0 / np.sqrt(1 + 4 * (frequencies / delta_f_fwhm) ** 2)
 
 
 def dBc_to_linear(L_dBc):

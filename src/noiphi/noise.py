@@ -32,17 +32,16 @@ def generate_tk95_noise(fs, psd):
     Astronomy and Astrophysics, 300, 707-710.
     """
     df = fs[-1] - fs[-2]
-    total_len = len(fs)
 
-    spectrum = np.zeros(total_len, dtype=complex)
+    spectrum = np.zeros(len(fs), dtype=complex)
 
     # Sampling the spectrum with Gaussian random variables
-    for i in range(1, int(total_len / 2 - 1)):
+    for i in range(1, int(len(fs) / 2 - 1)):
         # Generate complex Gaussian noise scaled by the PSD
         spectrum[i] = np.random.normal(0.0) * np.sqrt(psd[i] / 2) + \
                       1j * np.random.normal(0.0) * np.sqrt(psd[i] / 2)
         spectrum[-i] = np.conjugate(spectrum[i])
 
-    phi = np.fft.fftshift(sc.ifft(spectrum)) * total_len * np.sqrt(2 * df).real
+    phi = np.fft.fftshift(sc.ifft(spectrum)) * len(fs) * np.sqrt(2 * df).real
 
     return phi.real

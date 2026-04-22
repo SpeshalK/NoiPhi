@@ -3,15 +3,26 @@ from noise import generate_tk95_noise
 import numpy as np
 from noise import generate_tk95_noise
 
-class PhaseNoiseSimulator:
+# Default to 10 ns (100 MHz sampling) to capture high-frequency phase jitters up to 50MHz (NS sampling theorem)
+DEFAULT_DT = 1e-8  
+# Default to 100,000 samples (~1 ms of total time) 
+# Enough to see low-freq drift while keeping FFTs fast
+DEFAULT_N_SAMPLES = 100_000
+
+class NoiseSimulator:
     """
-    High-level orchestrator class for generating laser phase noise trajectories.
+    High-level orchestrator class for generating laser noise trajectories.
 
     This class handles the interpolation of experimental PSD data onto a 
     linear frequency grid and manages the execution of the TK95 algorithm.
+
+    The generateNoise() method returns a unique time-domain phase noise trajectory
+    in units of radians.
+
+    NOTE: Method is agnostic about units dataType of PSD. (Phase,Voltage,frequency PSD return their corresponding noise arrays)
     """
 
-    def __init__(self, frequencies, psd, dt, n_samples):
+    def __init__(self, frequencies, psd, dt=DEFAULT_DT, n_samples=DEFAULT_N_SAMPLES):
         """
         Parameters
         ----------
@@ -58,7 +69,7 @@ class PhaseNoiseSimulator:
 
         return f_linear_full, psd_linear_full
 
-    def generate(self):
+    def generateNoise(self):
         """
         Generates the time-domain phase noise trajectory.
 
@@ -67,7 +78,7 @@ class PhaseNoiseSimulator:
         t : ndarray
             Time axis (seconds).
         phi : ndarray
-            Phase noise trajectory (radians).
+            Noise trajectory (radians).
         """
         t = np.arange(self.n_samples) * self.dt
         fs, psd_mapped = self._get_linear_grid()
@@ -80,5 +91,5 @@ def phasenoise_maker(frequencies, psd, dt=1e-6, n_samples=1000):
     """
     Functional wrapper for quick noise generation.
     """
-    sim = PhaseNoiseSimulator(frequencies, psd, dt, n_samples)
-    return sim.generate()
+    sim = NoiseSimulator(frequencies, psd, dt, n_samples)
+    return sim.generateNoise()
