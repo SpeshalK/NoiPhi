@@ -1,13 +1,14 @@
-[build-system]
-requires = ["setuptools", "wheel"]
-build-backend = "setuptools.build_meta"
-
 [project]
 name = "noiphi"
 version = "0.1.0"
-description = "Laser Noise Simulation Toolkit"
+authors = [
+  { name="Tomas Kozlej", email="your.email@strath.ac.uk" },
+]
+description = "A phase noise simulator using the TK95 algorithm"
+readme = "README.md"
+requires-python = ">=3.8"
 dependencies = [
     "numpy",
     "scipy",
-    "matplotlib",
+    "matplotlib"
 ]

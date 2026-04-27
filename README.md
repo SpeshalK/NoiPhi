@@ -25,11 +25,7 @@ NoiPhi applies this approach to quantum simulation contexts, where accurate nois
 
 ## Installation
 
-```bash
-pip install noiphi
-```
-
-Or from source:
+From source:
 
 ```bash
 git clone https://github.com/your-username/noiphi.git
