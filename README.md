@@ -10,8 +10,9 @@ NoiPhi is a Python package for generating physically realistic noise trajectorie
 
 - Gaussian noise generation from arbitrary experimental PSDs using the TK95 algorithm
 - Laser phase noise simulation for quantum many-body and photonic systems
+- Tools for conversion and standardization of experimental laser noise PSD data in Voltage, frequency, and phase. 
 - Clean, composable API suitable for integration into larger simulation pipelines
-- Designed for extensibility — amplitude noise and generalised noise sources planned
+- Designed for extensibility (amplitude noise and generalised noise sources planned)
 
 ---
 
@@ -41,7 +42,7 @@ pip install -e .
 import numpy as np
 from noiphi import PhaseNoiseSimulator
 
-# Define a frequency axis and a PSD (e.g. from experiment)
+# Define a frequency axis and a PSD 
 frequencies = np.logspace(1, 6, 1000)        # 10 Hz to 1 MHz
 psd = 1e-10 / frequencies                    # 1/f noise example
 
@@ -77,16 +78,16 @@ If you use NoiPhi in academic work, please cite the original TK95 algorithm:
 
 > Timmer, J. & König, M. (1995). *On generating power law noise.* Astronomy and Astrophysics, 300, 707–710.
 
-A dedicated NoiPhi citation entry will be added upon first release.
+A dedicated NoiPhi citation entry will be added soon. 
 
 ---
 
 ## Contributing
 
-Contributions are welcome. Please open an issue to discuss proposed changes before submitting a pull request. See [CONTRIBUTING.md](CONTRIBUTING.md) for guidelines.
+Contributions are welcome. Please open an issue to discuss proposed changes before submitting a pull request.
 
 ---
 
 ## License
 
-MIT License. See [LICENSE](LICENSE) for details.
+BSD 3-Clause License. See [LICENSE](LICENSE) for details.
