@@ -1,7 +1,7 @@
-from noise import generate_tk95_noise
+from .noise import generate_tk95_noise
 
 import numpy as np
-from noise import generate_tk95_noise
+from .noise import generate_tk95_noise
 
 # Default to 10 ns (100 MHz sampling) to capture high-frequency phase jitters up to 50MHz (NS sampling theorem)
 DEFAULT_DT = 1e-8  

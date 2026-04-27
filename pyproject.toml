@@ -1,0 +1,13 @@
+[build-system]
+requires = ["setuptools", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "noiphi"
+version = "0.1.0"
+description = "Laser Noise Simulation Toolkit"
+dependencies = [
+    "numpy",
+    "scipy",
+    "matplotlib",
+]
