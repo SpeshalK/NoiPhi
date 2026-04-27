@@ -35,6 +35,10 @@ class NoiseSimulator:
         n_samples : int
             Total number of samples to generate in the time domain.
         """
+
+        if len(frequencies) != len(psd):
+            raise ValueError("Frequencies and PSD arrays must have the same length.")
+
         self.frequencies = np.asarray(frequencies)
         self.psd = np.asarray(psd)
         self.dt = dt
