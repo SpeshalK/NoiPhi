@@ -1,0 +1,16 @@
+cff-version: 1.2.0
+message: "If you use this software, please cite it as below."
+authors:
+- family-names: "Kozlej"
+  given-names: "Tomas"
+title: "NoiPhi: A stochastic noise simulation kit for quantum and photonic systems"
+version: 0.1.0
+date-released: 2026-04-28
+url: "https://github.com/your-username/noiphi"
+keywords:
+  - quantum noise simulation
+  - laser noise
+  - phase noise
+  - TK95 algorithm
+  - photonics
+license: BSD-3-Clause
