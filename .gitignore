@@ -1,8 +1,36 @@
-# Python bytecode
+# Python bytecode & cache
 __pycache__/
 *.pyc
+*.pyo
+*.pyd
+.pytest_cache/
+.coverage
 
-# Distribution / Packaging info
+# Environments (prevents pushing your local libraries)
+.venv/
+venv/
+env/
+bin/
+lib/
+
+# Distribution / Packaging
 *.egg-info/
 dist/
 build/
+sdist/
+
+# Jupyter Notebooks
+.ipynb_checkpoints/
+
+# Unit Testing
+.tox/
+.nox/
+
+# System Files
+.DS_Store
+Thumbs.db
+
+# Data (Optional: ignore large local datasets)
+# *.csv
+# *.mat
+# *.dat
