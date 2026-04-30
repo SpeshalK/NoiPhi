@@ -6,13 +6,25 @@ NoiPhi is a Python package for generating physically realistic noise trajectorie
 
 ---
 
+## Why NoiPhi?
+
+While many libraries focus on theoretical power-law noise (e.g., $1/f^α$), NoiPhi is built for the experimentalist who needs to transform a specific PSD from a spectrum analyzer into a realistic trajectory:
+
+- Data-Driven Accuracy: Preserves the unique "knees" and noise floors of your specific hardware using log-log interpolation of experimental data.  
+
+- Physics-Aware Extrapolation: Allows user to choose how to handle high-frequency roll-off beyond your measurement rangei (e.g., Kohlrausch decay), preventing unphysical artifacts.  
+
+
+- Lightweight & Composable: Optimized for photonics and quantum optics labs, designed to be easily integrated into larger simulation pipelines.
+
 ## Features
 
 - Gaussian noise generation from arbitrary experimental PSDs using the TK95 algorithm
-- Laser phase noise simulation for quantum many-body and photonic systems
 - Tools for conversion and standardization of experimental laser noise PSD data in Voltage, frequency, and phase. 
+- Laser phase noise simulation for quantum many-body and photonic systems
 - Clean, composable API suitable for integration into larger simulation pipelines
 - Designed for extensibility (amplitude noise and generalised noise sources planned)
+- Relevant demonstrations to show standard use cases
 
 ---
 
@@ -33,6 +45,20 @@ git clone https://github.com/your-username/noiphi.git
 cd noiphi
 pip install -e .
 ```
+
+---
+## Dependencies
+
+NoiPhi is designed to be lightweight, relying on the standard Python scientific stack to ensure easy integration into existing lab environments.
+
+| Library | Purpose | Min. Version |
+| :--- | :--- | :--- |
+| **Python** | Base Language | `3.9+` |
+| **NumPy** | FFT operations and array manipulation | `1.20+` |
+| **SciPy** | Log-log interpolation of experimental PSDs | `1.7+` |
+| **Matplotlib** | Noise visualization and demo plotting[cite: 3] | `3.4+` |
+
+> **Note:** For a complete list of specific sub-dependencies, please see the [requirements.txt](requirements.txt) file.
 
 ---
 
@@ -62,13 +88,32 @@ t, phi = sim.generate()
 
 ---
 
+## Demonstration repo
+
+The demo repository is organized to support a full showcase of the NoiPhi toolkit:
+
+- data/: Example CSV files of experimental laser noise data in different units.
+
+- usage/: API examples showing how to parse experimental data into NoiPhi, set sampling parameters, and configure extrapolation modes.
+
+<!--
+- physics/: Applied examples, such as simulating laser linewidth or phase-driven decoherence in quantum systems.  
+
+- analysis/: Mathematical verification tools, ensuring the generated noise matches the input statistics.
+-->
+
+---
+
 ## Roadmap
 
 - [x] Laser phase noise via TK95 Gaussian sampling
+- [x] Edge case handling (set frequencies out of data-range to zero/constant/decay)
+- [ ] Noise analysis tools
+- [ ] Detailed demonstrations (usage,physics,analysis)
 - [ ] Amplitude noise simulation
+- [ ] Utilities for fitting PSDs to experimental data
 - [ ] Support for non-Gaussian sampling methods
 - [ ] Generalised noise sources (magnetic field fluctuations, intensity noise, etc.)
-- [ ] Utilities for fitting PSDs to experimental data
 
 ---
 
