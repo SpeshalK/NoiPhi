@@ -15,7 +15,7 @@ from noiphi.convert import frequency_to_phase_psd
 # -- Input data --
 
 #Import data from a CSV file
-laserData = np.genfromtxt('./data/795nm_freqNoise_red.csv',dtype="f4,f4",delimiter=',',skip_header=8)
+laserData = np.genfromtxt('../data/795nm_freqNoise_red.csv',dtype="f4,f4",delimiter=',',skip_header=8)
 frequencies=laserData['f0']
 s_freq=laserData['f1']
 
