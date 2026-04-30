@@ -35,16 +35,24 @@ _,phi3=laser_NoiseSim.generateNoise()
 print (phi1)
 
 # -- Plotting --
-plt.figure(figsize=(10, 5))
-plt.plot(time * 1e6, phi1, label='Trajectory 1', alpha=0.8)
-plt.plot(time * 1e6, phi2, label='Trajectory 2', alpha=0.8)
-plt.plot(time * 1e6, phi3, label='Trajectory 3', alpha=0.8)
+fig, (ax1, ax2) = plt.subplots(2, 1, figsize=(10, 8))
 
-plt.title(f"Phase Noise Trajectories (dt={laser_NoiseSim.dt*1e9:.0f}ns)")
-plt.xlabel("Time (µs)")
-plt.ylabel("Phase Noise (rad)")
-plt.legend()
-plt.grid(True, which='both', linestyle='--', alpha=0.5)
+# Time Domain Plot
+ax1.plot(time * 1e6, phi1, label='Trajectory 1', alpha=0.8, color='tab:blue')
+ax1.plot(time * 1e6, phi2, label='Trajectory 2', alpha=0.8, color='tab:orange')
+ax1.set_title(f"Generated Phase Noise Trajectories ($dt={laser_NoiseSim.dt*1e9:.0f}$ ns)")
+ax1.set_xlabel(r"Time ($\mu$s)")
+ax1.set_ylabel(r"Phase $\phi(t)$ (rad)")
+ax1.legend()
+ax1.grid(True, alpha=0.3)
+
+# Frequency Domain Verification
+ax2.loglog(frequencies, s_phase, label='Target PSD (Input)', color='black', linestyle='--')
+ax2.set_title("Target Phase Noise Spectrum")
+ax2.set_xlabel("Frequency (Hz)")
+ax2.set_ylabel(r"$S_{\phi}(f)$ ($rad^2/Hz$)")
+ax2.legend()
+ax2.grid(True, which='both', alpha=0.3)
 
 plt.tight_layout()
 plt.show()
