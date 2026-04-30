@@ -58,7 +58,7 @@ NoiPhi is designed to be lightweight, relying on the standard Python scientific 
 | **SciPy** | Log-log interpolation of experimental PSDs | `1.7+` |
 | **Matplotlib** | Noise visualization and demo plotting[cite: 3] | `3.4+` |
 
-> **Note:** For a complete list of specific sub-dependencies, please see the [requirements.txt](requirements.txt) file.
+> **Note:** For a complete list of specific sub-dependencies, please see the [pyproject.toml](pyproject.toml) file.
 
 ---
 
