@@ -51,7 +51,6 @@ class NoiseSimulator:
         self.extrapolation_mode = extrapolation_mode.lower()
         self.beta = beta
 
-        # Derived parameters for the linear FFT grid
         self.fs_nyq = 1 / (2 * dt)
         self.df = 1 / (dt * n_samples)
 
@@ -114,6 +113,10 @@ class NoiseSimulator:
         # fs = [0, df, ..., f_nyq, -f_nyq+df, ..., -df]
         f_linear_full = np.fft.fftfreq(self.n_samples, d=self.dt)
         psd_linear_full = np.interp(np.abs(f_linear_full), f_linear_pos_with_dc, psd_linear_pos)
+
+        # Store linear f and psd as attributes
+        self.f_linear_full = f_linear_full
+        self.psd_linear_full = psd_linear_full
 
         return f_linear_full, psd_linear_full
 
