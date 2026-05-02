@@ -8,14 +8,14 @@ NoiPhi is a Python package for generating physically realistic noise trajectorie
 
 ## Why NoiPhi?
 
-While many libraries focus on theoretical power-law noise (e.g., $1/f^α$), NoiPhi is built for the experimentalist who needs to transform a specific PSD from a spectrum analyzer into a realistic trajectory:
+While many libraries focus on theoretical power-law noise (e.g., $1/f^α$), NoiPhi is built for the experimentalist who needs to transform a specific PSD from a spectrum analyzer into a realistic noise trajectory:
 
 - Data-Driven Accuracy: Preserves the unique "knees" and noise floors of your specific hardware using log-log interpolation of experimental data.  
 
 - Physics-Aware Extrapolation: Allows user to choose how to handle high-frequency roll-off beyond your measurement rangei (e.g., Kohlrausch decay), preventing unphysical artifacts.  
 
 
-- Lightweight & Composable: Optimized for photonics and quantum optics labs, designed to be easily integrated into larger simulation pipelines.
+- Lightweight & Composable: Optimized for photonics and quantum optics labs, designed to generate noise signals that represent a target spectrum and are easily integrated into larger simulation pipelines.
 
 ## Features
 
