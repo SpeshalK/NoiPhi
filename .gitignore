@@ -22,6 +22,9 @@ sdist/
 # Jupyter Notebooks
 .ipynb_checkpoints/
 
+# Test plot directories
+demos/usage/plots
+
 # Unit Testing
 .tox/
 .nox/
