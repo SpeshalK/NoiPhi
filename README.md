@@ -108,8 +108,8 @@ The demo repository is organized to support a full showcase of the NoiPhi toolki
 
 - [x] Laser phase noise via TK95 Gaussian sampling
 - [x] Edge case handling (set frequencies out of data-range to zero/constant/decay)
-- [ ] Noise analysis tools
-- [ ] Detailed demonstrations (usage,physics,analysis)
+- [x] Noise analysis tools (Autocorrelation, Allan Deviation, Cumulative Integrated Phase noise)
+- [/] Detailed demonstrations (usage,analysis,pysics)
 - [ ] Amplitude noise simulation
 - [ ] Utilities for fitting PSDs to experimental data
 - [ ] Support for non-Gaussian sampling methods
