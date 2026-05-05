@@ -1,3 +1,30 @@
+"""
+VoltagePSDtoPhaseNoise.py
+
+Analyzes and simulates phase noise for the 918nm Diode laser system. 
+This script serves as the primary template for processing raw Spectrum 
+Analyzer data into a calibrated time-domain noise trajectory.
+
+KEY WORKFLOW FEATURES:
+1. UNIT NORMALIZATION: Converts logarithmic dBm data to linear Voltage PSD (V^2/Hz). 
+   This step correctly accounts for the Resolution Bandwidth (RBW) to ensure 
+   the noise floor reflects physical density rather than instrument settings.
+
+2. PDH DISCRIMINATOR MODELING: Converts Voltage PSD to Phase Noise PSD (rad^2/Hz) 
+   by accounting for the frequency-dependent slope (K) of the Pound-Drever-Hall 
+   error signal and the cavity linewidth (FWHM) [Schmid, F. et al. (2021) arXiv:2102.07422]
+
+3. ARTIFACT-AWARE STITCHING: Merges low and high-frequency spans. 
+   - Uses [2:] indexing on high-freq data to discard initial calibration spikes 
+     common in Spectrum Analyzer sweeps[cite: 2].
+   - Employs a 'hard-cut' transition to prevent double-counting noise in 
+     the overlap region.
+
+4. SIMULATION STABILITY: Uses 'zero_offset' logic in the NoiseSimulator to 
+   force the phase trajectory to start at 0 rad, preventing non-physical 
+   transients in downstream control-loop simulations[cite: 1].
+"""
+
 import numpy as np
 import matplotlib.pyplot as plt
 

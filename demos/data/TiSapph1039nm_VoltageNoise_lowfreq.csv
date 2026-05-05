@@ -42,7 +42,7 @@ Normalize,Off
 Trace Name,Trace1
 X Axis Units,Hz
 Y Axis Units,dBm
-DATA
+DATA [credits: Dr Jonathan Bass]
 10,11.4954581263109
 109.99,-55.1451285875474
 209.98,-58.7316397726255
