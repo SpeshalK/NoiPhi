@@ -22,7 +22,7 @@ class NoiseSimulator:
     NOTE: Method is agnostic about units dataType of PSD. (Phase,Voltage,frequency PSD return their corresponding noise arrays)
     """
 
-    def __init__(self, frequencies, psd, dt=DEFAULT_DT, n_samples=DEFAULT_N_SAMPLES,extrapolation_mode='floor',beta=2.0):
+    def __init__(self, frequencies, psd, dt=DEFAULT_DT, n_samples=DEFAULT_N_SAMPLES,extrapolation_mode='floor',beta=2.0,zero_offset=True):
         """
         Parameters
         ----------
@@ -53,6 +53,8 @@ class NoiseSimulator:
 
         self.fs_nyq = 1 / (2 * dt)
         self.df = 1 / (dt * n_samples)
+
+        self.zero_offset = zero_offset
 
     def _interpolate_log_psd(self, f_target):
         """
@@ -119,10 +121,14 @@ class NoiseSimulator:
         self.psd_linear_full = psd_linear_full
 
         return f_linear_full, psd_linear_full
-
+    
     def generateNoise(self):
         """
-        Generates the time-domain phase noise trajectory.
+        Generates the time-domain phase noise trajectory
+        using TK95 algorithm.
+
+        Applies centering of initial value of trajectory to 
+        0 if: zero_offset=True.
 
         Returns
         -------
@@ -135,7 +141,10 @@ class NoiseSimulator:
         fs, psd_mapped = self._get_linear_grid()
         
         phi = generate_tk95_noise(fs, psd_mapped)
-        
+    
+        if self.zero_offset:
+            phi-=phi[0]
+
         return t, phi
 
 def phasenoise_maker(frequencies, psd, dt=1e-6, n_samples=1000, **kwargs):
