@@ -58,10 +58,10 @@ s_freq = s_freq_raw[mask_30k]
 # -- NoiPhi --
 
 #Convert s_freq to s_phase
-s_phase= noiphi.convert.frequency_to_phase_psd(frequencies,s_freq)
+s_phase= noiphi.conversion_tools.frequency_to_phase_psd(frequencies,s_freq)
 
 #Generate noise simulation (if not specified : time-step is dt=1e-6, length of noise signal is n_samples=100000)
-laser_NoiseSim = noiphi.NoiseSimulator(frequencies, s_phase)
+laser_NoiseSim = noiphi.core.NoiseSimulator(frequencies, s_phase)
 
 #Generate unqiue noise trajectories
 time,phi1=laser_NoiseSim.generateNoise()

@@ -2,9 +2,9 @@
 demo_extrapolationModes.py
 
 Demonstrates the three extrapolation modes available in the NoiPhi toolkit:
-1. 'constant': Fills out-of-band frequencies with a constant value (0).
-2. 'none': (Default) No extrapolation; power is zero outside the input range.
-3. 'edge': Extends the first/last measured data points to the boundaries.
+1. 'floor': (Default) Fills out-of-band frequencies with a constant values of the first and last data points.
+2. 'zero':  No extrapolation; power is zero outside the input range.
+3. 'decay': Applies exponential Kohlraush decay function with user specified decay constant (default is β=2.0) 
 
 This is critical for ensuring the IFFT has a complete frequency grid from DC 
 to Nyquist, even when experimental data is band-limited.
@@ -26,7 +26,7 @@ frequencies = laserData['f0'][mask]
 s_freq = laserData['f1'][mask]
 
 # Convert to Phase Noise PSD
-s_phase = noiphi.convert.frequency_to_phase_psd(frequencies, s_freq)
+s_phase = noiphi.conversion_tools.frequency_to_phase_psd(frequencies, s_freq)
 
 # -- 2. Generate 3 Independent Simulations with Different Modes --
 # We use a smaller dt/larger n_samples to emphasize the extrapolation regions
@@ -36,7 +36,7 @@ sims = {}
 
 for mode in modes:
     # Initialize simulator with specific extrapolation mode
-    sim = noiphi.NoiseSimulator(frequencies, s_phase, extrapolation_mode=mode)
+    sim = noiphi.core.NoiseSimulator(frequencies, s_phase, extrapolation_mode=mode)
     time, phi = sim.generateNoise()
     
     # Perform Welch verification (using ensemble averaging logic for smoothness)
