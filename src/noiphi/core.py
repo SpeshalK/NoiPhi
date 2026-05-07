@@ -97,7 +97,7 @@ class NoiseSimulator:
 
         return np.exp(log_psd_interp)
 
-    def _get_linear_grid(self):
+    def _get_linear_grid(self,n_samples,dt):
         """
         Interpolates the input PSD onto a linear grid spanning [-f_Nyq, f_Nyq].
         """
@@ -113,7 +113,7 @@ class NoiseSimulator:
         
         # Construct full symmetric frequency axis for TK95 as expected by FFT modules
         # fs = [0, df, ..., f_nyq, -f_nyq+df, ..., -df]
-        f_linear_full = np.fft.fftfreq(self.n_samples, d=self.dt)
+        f_linear_full = np.fft.fftfreq(n_samples, d=dt)
         psd_linear_full = np.interp(np.abs(f_linear_full), f_linear_pos_with_dc, psd_linear_pos)
 
         # Store linear f and psd as attributes
@@ -122,12 +122,15 @@ class NoiseSimulator:
 
         return f_linear_full, psd_linear_full
     
-    def generateNoise(self):
+    def generateNoise(self, n_samples=None,dt=None):
         """
-        Generates the time-domain phase noise trajectory
+        1. Standardizes frequency and power spectral data
+        to defined sampling rate and time step.
+
+        2. Generates the time-domain phase noise trajectory
         using TK95 algorithm.
 
-        Applies centering of initial value of trajectory to 
+        3. Applies centering of initial value of trajectory to 
         0 if: zero_offset=True.
 
         Returns
@@ -137,8 +140,12 @@ class NoiseSimulator:
         phi : ndarray
             Noise trajectory (radians).
         """
-        t = np.arange(self.n_samples) * self.dt
-        fs, psd_mapped = self._get_linear_grid()
+
+        N = n_samples if n_samples is not None else self.n_samples
+        tstep = dt if dt is not None else self.dt
+
+        t = np.arange(N) * tstep
+        fs, psd_mapped = self._get_linear_grid(N,tstep)
         
         phi = generate_tk95_noise(fs, psd_mapped)
     
