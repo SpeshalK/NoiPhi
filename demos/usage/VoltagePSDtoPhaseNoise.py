@@ -15,14 +15,13 @@ KEY WORKFLOW FEATURES:
    error signal and the cavity linewidth (FWHM) [Schmid, F. et al. (2021) arXiv:2102.07422]
 
 3. ARTIFACT-AWARE STITCHING: Merges low and high-frequency spans. 
-   - Uses [2:] indexing on high-freq data to discard initial calibration spikes 
-     common in Spectrum Analyzer sweeps[cite: 2].
+   - Uses [2:] indexing on high-freq data to discard initial calibration spikes  
    - Employs a 'hard-cut' transition to prevent double-counting noise in 
      the overlap region.
 
 4. SIMULATION STABILITY: Uses 'zero_offset' logic in the NoiseSimulator to 
    force the phase trajectory to start at 0 rad, preventing non-physical 
-   transients in downstream control-loop simulations[cite: 1].
+   initial phase jump.
 """
 
 import numpy as np
@@ -38,7 +37,6 @@ RBW_LOW = 10.0       # Resolution Bandwidth for low-freq file (Hz)
 RBW_HIGH = 3000.0    # Resolution Bandwidth for high-freq file (Hz)
 
 # 1. Load Data (User-handled generalization)
-# Using skip_header=45 to bypass Spectrum Analyzer metadata[cite: 2]
 low_data = np.genfromtxt("../data/Diode918nm_VoltageNoise_lowfreq.csv", delimiter=',', skip_header=45)
 high_data = np.genfromtxt("../data/Diode918nm_VoltageNoise_highfreq.csv", delimiter=',', skip_header=45)
 
@@ -46,7 +44,6 @@ f_l, dbm_l = low_data[:, 0], low_data[:, 1]
 f_h, dbm_h = high_data[:, 0], high_data[:, 1]
 
 # 2. Scale Voltage PSD from dBm to linear (V^2/Hz)
-# Allows for verification of electrical noise floor
 sv_l = noiphi.conversion_tools.dBm_to_Voltage_psd(dbm_l, rbw=RBW_LOW, impedance=OHM)
 sv_h = noiphi.conversion_tools.dBm_to_Voltage_psd(dbm_h, rbw=RBW_HIGH, impedance=OHM)
 
@@ -56,7 +53,6 @@ s_phi_l = noiphi.conversion_tools.voltage_to_phase_psd(f_l, sv_l, K0, DfFWHM918)
 s_phi_h = noiphi.conversion_tools.voltage_to_phase_psd(f_h, sv_h, K0, DfFWHM918)
 
 # 4. Stitch Spectra
-# Concatenate and sort to create a single continuous PSD (omitting first 2 initial callibration error datapoints in s_phi_h)
 f_final, s_phi_final = noiphi.conversion_tools.stitch_psds(f_l, s_phi_l, f_h[2:], s_phi_h[2:], transition_freq=1e4)
 
 # 5. Generate Noise Trajectory
