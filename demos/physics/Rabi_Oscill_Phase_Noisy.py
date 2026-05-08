@@ -28,7 +28,6 @@ sig_minus = np.array([[0, 0],
 
 # -- 3. Time Evolution --
 dt = sim.dt
-print (dt)
 for p in phi:
 
     H = (Omega / 2.0) * (np.exp(1j * p) * sig_plus + np.exp(-1j * p) * sig_minus)
@@ -38,12 +37,10 @@ for p in phi:
     state = U @ state
     probs_e.append(np.abs(state[1])**2)
 
-print (probs_e)
-
 # -- 4. Visualization --
 plt.figure(figsize=(10, 4))
 plt.plot(time * 1e6, probs_e, label="Noisy Rabi")
-plt.title("Impact of strong laser phase noise on single-atom rabi flop")
+plt.title("Impact of strong laser phase noise on single-atom rabi oscillations")
 plt.xlabel("Time (μs)")
 plt.ylabel("Excited State Population")
 plt.grid(True, alpha=0.3)
