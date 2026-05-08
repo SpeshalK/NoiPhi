@@ -1,9 +1,7 @@
 import numpy as np
 import matplotlib.pyplot as plt
 from scipy.linalg import expm
-from scipy.sparse import tril,triu
 import noiphi
-from main_Rydbuild import opMaker
 
 # -- 1. Load Enhanced Noise and Generate Trajectory --
 # We use the enhanced 950 (blue) laser which has a significant servo bump
