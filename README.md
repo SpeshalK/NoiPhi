@@ -94,22 +94,17 @@ The demo repository is organized to support a full showcase of the NoiPhi toolki
 
 - data/: Example CSV files of experimental laser noise data in different units.
 
-- usage/: API examples showing how to parse experimental data into NoiPhi, set sampling parameters, and configure extrapolation modes.
+- usage/: API examples showing how to parse experimental data into NoiPhi, set sampling parameters, deploying noise analysis tools, and configure extrapolation modes.
 
-<!--
 - physics/: Applied examples, such as simulating laser linewidth or phase-driven decoherence in quantum systems.  
-
-- analysis/: Mathematical verification tools, ensuring the generated noise matches the input statistics.
--->
-
 ---
 
 ## Roadmap
 
 - [x] Laser phase noise via TK95 Gaussian sampling
 - [x] Edge case handling (set frequencies out of data-range to zero/constant/decay)
-- [ ] Noise analysis tools
-- [ ] Detailed demonstrations (usage,physics,analysis)
+- [x] Noise analysis tools (Autocorrelation, Allan Deviation, Cumulative Integrated Phase noise)
+- [x] Detailed demonstrations (usage,analysis,pysics)
 - [ ] Amplitude noise simulation
 - [ ] Utilities for fitting PSDs to experimental data
 - [ ] Support for non-Gaussian sampling methods
@@ -117,13 +112,23 @@ The demo repository is organized to support a full showcase of the NoiPhi toolki
 
 ---
 
-## Citation
+## Citations
 
-If you use NoiPhi in academic work, please cite the original TK95 algorithm:
+If you use NoiPhi in academic work, please also cite the original TK95 algorithm:
 
 > Timmer, J. & König, M. (1995). *On generating power law noise.* Astronomy and Astrophysics, 300, 707–710.
 
-A dedicated NoiPhi citation entry will be added soon. 
+Other work which aided the creation of this software package includes:
+
+> Schmid, F. & Weitenberg, J. & Hänsch, T. W. & Udem, T. & Ozawa, A. (2019) *Simple phase noise measurement scheme for cavity-stabilized laser systems.* Optics Letters, Vol. 44, Issue 11.
+
+> de Léséleuc, S. & Barredo, D. & Lienhard, V. & Browaeys, A. & Lahaye, T (2018). *Analysis of imperfections in the coherent optical excitation of single atoms to Rydberg states.* Phys. Rev. A, Vol. 97, Issue 5.
+
+The noise code in this software has been directly implemented in the following articles:
+
+> Kozlej, T & Pelegri, G & Pritchard, J.D & Daley, A.J. (2026) *Adiabatic state preparation and thermalization of simulated phase noise in a Rydberg spin Hamiltonian.* arXiv:2505.04595 
+
+> Tomas Kozleaj (2026) *Laser Phase noise in Rydberg Atom Arrays.* PhD diss., Univeristy of strathclyde.
 
 ---
 

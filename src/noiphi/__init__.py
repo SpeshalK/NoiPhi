@@ -2,9 +2,10 @@
 NoiPhi: A toolkit for simulating experimental laser noise.
 """
 
-from .core import NoiseSimulator
+from . import core
 from . import noise
 from . import conversion_tools
+from . import analysis_tools
 
 __version__ = "0.1.0"
 __author__ = "Tomas Kozlej"

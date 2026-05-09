@@ -137,7 +137,7 @@ def pdh_discriminator_slope(frequencies, k0, delta_f_fwhm):
     return k0 / np.sqrt(1 + 4 * (frequencies / delta_f_fwhm) ** 2)
 
 
-def dBc_to_linear(L_dBc):
+def dBc_to_phase_psd(L_dBc):
     """
     Converts a single sideband phase noise level from dBc/Hz to linear units.
 
@@ -162,3 +162,67 @@ def dBc_to_linear(L_dBc):
     For small phase noise (L_dBc << 0 dBc/Hz), L_linear ≈ S_phi(f) / 2.
     """
     return 10 ** (np.asarray(L_dBc, dtype=float) / 10)
+
+def dBm_to_Voltage_psd(psd_dbm, rbw, impedance=50.0):
+    """
+    Scales raw Spectrum Analyzer power levels to a linear Voltage PSD (V^2/Hz).
+
+    This function implements the standard conversion used to normalize instrument
+    traces based on Resolution Bandwidth (RBW) and system impedance.
+
+    Parameters
+    ----------
+    psd_dbm : array_like
+        The raw power spectral density measured by the instrument (dBm or dBm/Hz).
+    rbw : float
+        The Resolution Bandwidth (Hz) setting used during the measurement.
+    impedance : float, optional
+        The system impedance in Ohms. Default is 50.0.
+
+    Returns
+    -------
+    s_v : ndarray
+        The linear Voltage Power Spectral Density in V^2/Hz.
+
+    Notes
+    -----
+    The formula used is:
+        S_V = (Impedance * 10^(P_dBm / 10)) / (1000 * RBW)
+    """
+    psd_dbm = np.asarray(psd_dbm, dtype=float)
+    
+    # Convert dBm to linear scale and normalize by RBW and Impedance
+    # The factor of 1000 accounts for the mW to W conversion (dBm)
+    p_linear = 10**(psd_dbm / 10.0)
+    s_v = (impedance * p_linear) / (1000.0 * rbw)
+    
+    return s_v
+
+def stitch_psds(f_low, s_low, f_high, s_high, transition_freq):
+    """
+    Stitches two PSD segments at a specific transition frequency to 
+    eliminate overlap and minimize discontinuities.
+    
+    Parameters
+    ----------
+    f_low, s_low : ndarray
+        Frequency and PSD values for the low-frequency segment.
+    f_high, s_high : ndarray
+        Frequency and PSD values for the high-frequency segment.
+    transition_freq : float
+        The frequency (Hz) where the script should switch from low to high.
+    """
+    # Filter low segment to stay below transition
+    mask_low = f_low < transition_freq
+    f_low_cut = f_low[mask_low]
+    s_low_cut = s_low[mask_low]
+    
+    # Filter high segment to stay above transition
+    mask_high = f_high >= transition_freq
+    f_high_cut = f_high[mask_high]
+    s_high_cut = s_high[mask_high]
+    
+    f_final = np.concatenate([f_low_cut, f_high_cut])
+    s_final = np.concatenate([s_low_cut, s_high_cut])
+    
+    return f_final, s_final
