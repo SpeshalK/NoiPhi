@@ -6,7 +6,6 @@ from .noise import generate_tk95_noise
 # Default to 10 ns (100 MHz sampling) to capture high-frequency phase jitters up to 50MHz (NS sampling theorem)
 DEFAULT_DT = 1e-8  
 # Default to 100,000 samples (~1 ms of total time) 
-# Enough to see low-freq drift while keeping FFTs fast
 DEFAULT_N_SAMPLES = 100_000
 
 class NoiseSimulator:
@@ -75,7 +74,7 @@ class NoiseSimulator:
             l_val, r_val = -np.inf, -np.inf
         elif self.extrapolation_mode == 'decay':
             l_val, r_val = log_psd_data[0], -np.inf # Decay handled manually below
-        else: # Default to 'floor'
+        else:
             l_val, r_val = log_psd_data[0], log_psd_data[-1]
 
         log_psd_interp = np.interp(
@@ -89,7 +88,6 @@ class NoiseSimulator:
             log_f_last = log_f_data[-1]
             log_psd_last = log_psd_data[-1]
             
-            # S(f) = S_last * (f/f_last)^-beta  => log(S) = log(S_last) - beta * log(f/f_last)
             log_psd_interp[high_freq_mask] = log_psd_last - self.beta * (
                 log_f_target[high_freq_mask] - log_f_last
             )
@@ -104,7 +102,6 @@ class NoiseSimulator:
         # Create linear positive frequency axis (excluding DC)
         f_linear_pos = np.arange(self.df, self.fs_nyq, self.df)
         
-        # Interpolate
         psd_interp = self._interpolate_log_psd(f_linear_pos)
 
         # Prepend DC bin (set to 0)
@@ -116,7 +113,6 @@ class NoiseSimulator:
         f_linear_full = np.fft.fftfreq(n_samples, d=dt)
         psd_linear_full = np.interp(np.abs(f_linear_full), f_linear_pos_with_dc, psd_linear_pos)
 
-        # Store linear f and psd as attributes
         self.f_linear_full = f_linear_full
         self.psd_linear_full = psd_linear_full
 
@@ -158,6 +154,5 @@ def phasenoise_maker(frequencies, psd, dt=1e-6, n_samples=1000, **kwargs):
     """
     Functional wrapper for quick noise generation.
     """
-    # Now this forwards extrapolation_mode and beta to the class
     sim = NoiseSimulator(frequencies, psd, dt=dt, n_samples=n_samples, **kwargs)
     return sim.generateNoise()

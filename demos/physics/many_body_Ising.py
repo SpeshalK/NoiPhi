@@ -5,17 +5,16 @@ import noiphi
 from main_Rydbuild import buildRydHamil
 
 # -- 1. Physical Parameters --
-N = 4                    # Number of atoms in the chain
-Omega = 2 * np.pi * 2.0    # Rabi frequency (MHz)
-Delta = 2 * np.pi * 0.0    # Detuning (MHz)
-C6 = 2 * np.pi * 800.0     # Interaction strength (Van der Waals)
-dt = 1e-8                # 10ns time step (to resolve ~1MHz servo bump)
-n_steps = 500            # Duration of simulation
+N = 4                      # Number of atoms in the chain
+V_int = 2 * np.pi * 0.0 * 1e6 # MHz - Scaling factor for interactions
+Omega = 2 * np.pi * 2.0 * 1e6  # Rabi frequency (MHz)
+Delta = 2 * np.pi * 0.0 * 1e6    # Detuning (MHz)
+dt = 1e-8                  # 10ns time step (to resolve ~1MHz servo bump)
+n_steps = 500              # Duration of simulation
+time = np.arange(n_steps)*dt
 
 # -- 2. Build many-body Hamiltonian components --
-# buildRydHamil returns (Hx_upper, Hx_lower, H_detuning, H_interaction)
-# Hx_plus/minus represent the collective raising/lowering operators
-Hx_plus, Hx_minus, H_delta, H_int = buildRydHamil(N, C=C6)
+Hx_plus, Hx_minus, H_delta, H_int = buildRydHamil(N, C=3)
 
 # -- 3. Generate Noise Trajectory with noiphi --
 # Loading the real-world 'blueENHANCED' 950nm laser profile
@@ -25,33 +24,45 @@ f, s_freq = data[:, 0], data[:, 1]
 # Convert frequency noise to phase PSD and simulate
 s_phase = noiphi.conversion_tools.frequency_to_phase_psd(f, s_freq)
 sim = noiphi.core.NoiseSimulator(f, s_phase, dt=dt, n_samples=n_steps)
-time, phi = sim.generateNoise()
+fulltime, phi = sim.generateNoise()
+print (phi)
 
 # -- 4. Time Evolution with Global Noise --
-state = np.zeros(2**N, dtype=complex)
-state[0] = 1.0  # Start with all atoms in ground state |00...0>
-probs_ground = []
+state_clean = np.zeros(2**N, dtype=complex)
+state_noisy = np.zeros(2**N, dtype=complex)
+state_clean[0],state_noisy[0] = 1.0,1.0  # Initial ground state
+p_gr_clean,p_gr_noisy = [],[]
 
 print(f"Starting evolution for {N} atoms...")
+H_static= - (Delta * H_delta) +  (V_int * H_int)
+
 for p in phi:
-    # Construct the Hamiltonian at this time step
+    # Construct the Hamiltonian
     # The phase noise phi(t) is applied globally to the laser drive
-    H = (Omega / 2.0) * (np.exp(1j * p) * Hx_plus + np.exp(-1j * p) * Hx_minus) \
-        - Delta * H_delta + H_int
-    
+    H_dynamic_clean = (Omega / 2.0) * (Hx_plus +  Hx_minus) 
+    H_dynamic_noisy = (Omega / 2.0) * (np.exp(1j * p) * Hx_plus + np.exp(-1j * p) * Hx_minus) 
+
+    H_clean=H_static+H_dynamic_clean
+    H_noisy=H_static+H_dynamic_noisy
+            
     # Evolve the many-body state by dt
-    state = expm_multiply(-1j * H * dt, state)
-    
+    state_clean = expm_multiply(-1j * H_clean * dt, state_clean)
+    state_noisy = expm_multiply(-1j * H_noisy * dt, state_noisy)
+
     # Record the many-body ground state population
-    probs_ground.append(np.abs(state[0])**2)
+    p_gr_clean.append(np.abs(state_clean[0])**2)
+    p_gr_noisy.append(np.abs(state_noisy[0])**2)
+
 
 # -- 5. Visualization --
 plt.figure(figsize=(10, 6))
-plt.plot(time * 1e6, probs_ground, label=f'{N}-atom Chain (Noisy Evolution)')
+plt.plot(time * 1e6, p_gr_clean, label=f'{N}-atom Chain')
+plt.plot(time * 1e6, p_gr_noisy, label=f'{N}-atom Chain (Noisy Evolution)')
 plt.xlabel('Time (μs)')
 plt.ylabel(r'Ground State Population $|\langle 00...0 | \psi(t) \rangle|^2$')
 plt.title('Many-Body Ising Evolution: Global Phase Noise Impact')
 plt.legend()
+plt.ylim(0,1.1)
 plt.grid(True, alpha=0.3)
 plt.show()
 #plt.savefig('many_body_ising_demo.png')
