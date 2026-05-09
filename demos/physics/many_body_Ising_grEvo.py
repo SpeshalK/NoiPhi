@@ -35,11 +35,11 @@ p_gr_clean,p_gr_noisy = [],[]
 
 print(f"Starting evolution for {N} atoms...")
 H_static= - (Delta * H_delta) +  (V_int * H_int)
+H_dynamic_clean = (Omega / 2.0) * (Hx_plus +  Hx_minus) 
 
 for p in phi:
     # Construct the Hamiltonian
     # The phase noise phi(t) is applied globally to the laser drive
-    H_dynamic_clean = (Omega / 2.0) * (Hx_plus +  Hx_minus) 
     H_dynamic_noisy = (Omega / 2.0) * (np.exp(1j * p) * Hx_plus + np.exp(-1j * p) * Hx_minus) 
 
     H_clean=H_static+H_dynamic_clean
