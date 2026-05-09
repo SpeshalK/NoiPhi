@@ -147,7 +147,7 @@ t_us = T_vals * 1e6
 # Left panel: contrast decay — stochastic vs analytic prediction
 ax1.semilogx(t_us, contrast_analytic,
              color='black', linewidth=1.5, linestyle='--',
-             label=r'Analytic: $e^{-\sigma^2_\phi(T)/2}$')
+             label=r'Analytic: $e^{-\sigma^2_\phi(T)/2}$ (empirical $\sigma_{\phi}$)')
 ax1.semilogx(t_us, contrast_sim,
              'o', color='tab:red', markersize=5,
              label=f'Stochastic ({n_trajs} traj × {n_windows} windows)')
