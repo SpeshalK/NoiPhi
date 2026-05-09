@@ -2,7 +2,7 @@ import numpy as np
 import scipy.fftpack as sc
 
 
-def generate_tk95_noise(fs, psd):
+def generate_tk95_noise(fs,psd,rng):
     """
     Low-level implementation of the TK95 noise generation algorithm.
 
@@ -20,6 +20,9 @@ def generate_tk95_noise(fs, psd):
     psd : ndarray
         Power Spectral Density evaluated at each element of `fs`.
         Must be the same length as `fs`.
+    rng : numpy.random.Generator
+        Random number generator instance. Pass np.random.default_rng(seed)
+        for reproducible output, or np.random.default_rng() for random.
 
     Returns
     -------
@@ -32,16 +35,15 @@ def generate_tk95_noise(fs, psd):
     Astronomy and Astrophysics, 300, 707-710.
     """
     df = fs[-1] - fs[-2]
+    n  = len(fs)
+    half = int(n / 2 - 1)
 
-    spectrum = np.zeros(len(fs), dtype=complex)
-
-    # Sampling the spectrum with Gaussian random variables
-    for i in range(1, int(len(fs) / 2 - 1)):
-        # Generate complex Gaussian noise scaled by the PSD
-        spectrum[i] = np.random.normal(0.0) * np.sqrt(psd[i] / 2) + \
-                      1j * np.random.normal(0.0) * np.sqrt(psd[i] / 2)
-        spectrum[-i] = np.conjugate(spectrum[i])
-
-    phi = np.fft.fftshift(sc.ifft(spectrum)) * len(fs) * np.sqrt(2 * df).real
-
+    real_parts = rng.normal(0.0, 1.0, half) * np.sqrt(psd[1:half+1] / 2)
+    imag_parts = rng.normal(0.0, 1.0, half) * np.sqrt(psd[1:half+1] / 2)
+    
+    spectrum = np.zeros(n, dtype=complex)
+    spectrum[1:half+1]  = real_parts + 1j * imag_parts
+    spectrum[-(half):] = np.conjugate(spectrum[1:half+1])[::-1]
+    
+    phi = np.fft.fftshift(sc.ifft(spectrum)) * n * np.sqrt(2 * df).real
     return phi.real
