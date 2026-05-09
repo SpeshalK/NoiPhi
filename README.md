@@ -53,7 +53,7 @@ NoiPhi is designed to be lightweight, relying on the standard Python scientific 
 
 | Library | Purpose | Min. Version |
 | :--- | :--- | :--- |
-| **Python** | Base Language | `3.9+` |
+| **Python** | Base Language | `3.8+` |
 | **NumPy** | FFT operations and array manipulation | `1.20+` |
 | **SciPy** | Log-log interpolation of experimental PSDs | `1.7+` |
 | **Matplotlib** | Noise visualization and demo plotting[cite: 3] | `3.4+` |
@@ -66,15 +66,13 @@ NoiPhi is designed to be lightweight, relying on the standard Python scientific 
 
 ```python
 import numpy as np
-from noiphi import PhaseNoiseSimulator
+import noiphi
 
-# Define a frequency axis and a PSD 
-frequencies = np.logspace(1, 6, 1000)        # 10 Hz to 1 MHz
-psd = 1e-10 / frequencies                    # 1/f noise example
+frequencies = np.logspace(1, 6, 1000)
+psd = 1e-10 / frequencies
 
-# Generate a phase noise trajectory
-sim = PhaseNoiseSimulator(frequencies, psd, dt=1e-6, n_samples=10_000)
-t, phi = sim.generate()
+sim = noiphi.core.NoiseSimulator(frequencies, psd, dt=1e-6, n_samples=10_000)
+t, phi = sim.generateNoise()
 ```
 
 ---
@@ -128,7 +126,7 @@ The noise code in this software has been directly implemented in the following a
 
 > Kozlej, T & Pelegri, G & Pritchard, J.D & Daley, A.J. (2026) *Adiabatic state preparation and thermalization of simulated phase noise in a Rydberg spin Hamiltonian.* arXiv:2505.04595 
 
-> Tomas Kozleaj (2026) *Laser Phase noise in Rydberg Atom Arrays.* PhD diss., Univeristy of strathclyde.
+> Dr. Tomas Kozlej (2026) *Laser Phase noise in Rydberg Atom Arrays.* PhD diss., University of Strathclyde.
 
 ---
 

@@ -1,14 +1,36 @@
+[build-system]
+requires = ["setuptools>=61.0"]
+build-backend = "setuptools.backends.legacy:build"
+
 [project]
 name = "noiphi"
 version = "0.1.0"
 authors = [
   { name="Tomas Kozlej", email="tomaskoztwo@gmail.com" },
 ]
-description = "A phase noise simulator using the TK95 algorithm"
+description = "A stochastic phase noise simulator using the TK95 algorithm, designed for quantum and photonic systems."
 readme = "README.md"
+license = { file = "LICENSE" }
 requires-python = ">=3.8"
+keywords = ["laser", "phase noise", "quantum", "TK95", "Rydberg", "noise simulation", "photonics"]
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.8",
+    "Programming Language :: Python :: 3.9",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "License :: OSI Approved :: BSD Software License",
+    "Operating System :: OS Independent",
+    "Topic :: Scientific/Engineering :: Physics",
+    "Intended Audience :: Science/Research",
+    "Development Status :: 3 - Alpha",
+]
 dependencies = [
     "numpy>=1.20",
     "scipy>=1.7",
-    "matplotlib>=3.4"
+    "matplotlib>=3.4",
 ]
+
+[project.urls]
+Repository = "https://github.com/your-username/noiphi"
+"Bug Tracker" = "https://github.com/your-username/noiphi/issues"
