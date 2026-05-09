@@ -94,14 +94,9 @@ The demo repository is organized to support a full showcase of the NoiPhi toolki
 
 - data/: Example CSV files of experimental laser noise data in different units.
 
-- usage/: API examples showing how to parse experimental data into NoiPhi, set sampling parameters, and configure extrapolation modes.
+- usage/: API examples showing how to parse experimental data into NoiPhi, set sampling parameters, deploying noise analysis tools, and configure extrapolation modes.
 
-<!--
 - physics/: Applied examples, such as simulating laser linewidth or phase-driven decoherence in quantum systems.  
-
-- analysis/: Mathematical verification tools, ensuring the generated noise matches the input statistics.
--->
-
 ---
 
 ## Roadmap
