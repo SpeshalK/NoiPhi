@@ -19,7 +19,7 @@ KEY WORKFLOW FEATURES:
    - Employs a 'hard-cut' transition to prevent double-counting noise in 
      the overlap region.
 
-4. SIMULATION STABILITY: Uses 'zero_offset' logic in the NoiseSimulator to 
+4. SIMULATION STABILITY: Uses 'zero_offset' logic in the PhaseNoiseSimulator to 
    force the phase trajectory to start at 0 rad, preventing non-physical 
    initial phase jump.
 """
@@ -56,7 +56,7 @@ s_phi_h = noiphi.conversion_tools.voltage_to_phase_psd(f_h, sv_h, K0, DfFWHM918)
 f_final, s_phi_final = noiphi.conversion_tools.stitch_psds(f_l, s_phi_l, f_h[2:], s_phi_h[2:], transition_freq=1e4)
 
 # 5. Generate Noise Trajectory
-sim = noiphi.core.NoiseSimulator(f_final, s_phi_final, extrapolation_mode=r'decay $(\beta = 2.0)')
+sim = noiphi.core.PhaseNoiseSimulator(f_final, s_phi_final, extrapolation_mode='decay')
 t, phi = sim.generateNoise()
 
 # --- Visualization ---

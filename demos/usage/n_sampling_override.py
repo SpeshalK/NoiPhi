@@ -1,21 +1,31 @@
 """
-    Generates a phase noise trajectory, optionally overriding class defaults.
+n_sampling_override.py
 
-    Parameters
-    ----------
-    n_samples : int, optional
-        Number of points to generate. Defaults to self.n_samples.
-    dt : float, optional
-        Time step in seconds. Defaults to self.dt.
+Demonstrates the sampling feature of PhaseNoiseSimulator —
+the ability to generate noise trajectories at different time resolutions
+from a single initialised simulator instance.
 
-    Returns
-    -------
-    t : ndarray
-        Time axis (seconds).
-    phi : ndarray
-        Phase noise trajectory (radians).
+A key design feature of NoiPhi is that the simulator is initialised once
+from the experimental PSD, and generateNoise() can then be called with
+different dt and n_samples overrides without re-interpolating the input
+data. This makes it efficient to view the same noise source across
+very different timescales.
+
+TWO VIEWS OF THE SAME LASER:
+
+    Rabi Scale   — dt=10ns,  n_samples=2^12 (~40 us total)
+                   High time resolution to resolve the MHz servo bump
+                   and capture fast phase fluctuations relevant to
+                   single-atom Rabi oscillations.
+
+    Stability Scale — dt=1us, n_samples=2^18 (~260 ms total)
+                      Low time resolution to capture slow phase drift
+                      over long timescales, relevant to laser locking
+                      and stability characterisation.
+
+DATA:
+    950nm_freqNoise_blueENHANCED.csv — frequency noise PSD (Hz^2/Hz)
 """
-
 import numpy as np
 import matplotlib.pyplot as plt
 import noiphi
@@ -26,7 +36,7 @@ f, s_freq = data[:, 0], data[:, 1]
 s_phase = noiphi.conversion_tools.frequency_to_phase_psd(f, s_freq)
 
 # Initialize ONCE with default settings
-sim = noiphi.core.NoiseSimulator(f, s_phase)
+sim = noiphi.core.PhaseNoiseSimulator(f, s_phase)
 
 # 2. OVERRIDE: The "Rabi" View (High resolution, short time)
 # We want to see the MHz servo bump clearly.

@@ -1,6 +1,4 @@
 #!/bin/python3
-import sys
-sys.dont_write_bytecode = True
 import scipy.sparse as sp
 from scipy.sparse import csr_matrix as csr
 import numpy as np
@@ -21,7 +19,7 @@ def buildRydHamil(N,C,λ=0.0,periodic=False,nnI=False,nnI2=False):
         Number of atoms in the chain.
     C : float
         Interaction strength exponent (e.g., 6 for Van der Waals).
-    lambda_val : float, optional
+    λ : float, optional
         Strength of the XXZ-type exchange term (sigX*sigX + sigY*sigY).
     periodic : bool, optional
         Whether to apply Periodic Boundary Conditions (PBC).

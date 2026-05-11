@@ -61,7 +61,7 @@ s_freq = s_freq_raw[mask_30k]
 s_phase= noiphi.conversion_tools.frequency_to_phase_psd(frequencies,s_freq)
 
 #Generate noise simulation (if not specified : time-step is dt=1e-6, length of noise signal is n_samples=100000)
-laser_NoiseSim = noiphi.core.NoiseSimulator(frequencies, s_phase)
+laser_NoiseSim = noiphi.core.PhaseNoiseSimulator(frequencies, s_phase)
 
 #Generate unqiue noise trajectories
 time,phi1=laser_NoiseSim.generateNoise()
@@ -81,8 +81,8 @@ f_welch, s_ensemble = welch(phi_ensemble, fs=fs, nperseg=laser_NoiseSim.n_sample
 s_welch=np.mean(s_ensemble,axis=0)
 
 # Normalize s_welch by a factor of 4:
-# 1. A factor of 2 accounts for Welch's single-sided folding (summing +/- freq power)[cite: 1].
-# 2. A factor of 2 accounts for the internal variance normalization (sqrt(2*df)) in TK95[cite: 2, 3].
+# 1. A factor of 2 accounts for Welch's single-sided folding (summing +/- freq power)
+# 2. A factor of 2 accounts for the internal variance normalization (sqrt(2*df)) in TK95
 s_welch/=2*2
 
 # -- Plotting (2x2 Grid) --

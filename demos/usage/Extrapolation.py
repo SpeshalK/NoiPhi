@@ -36,7 +36,7 @@ sims = {}
 
 for mode in modes:
     # Initialize simulator with specific extrapolation mode
-    sim = noiphi.core.NoiseSimulator(frequencies, s_phase, extrapolation_mode=mode)
+    sim = noiphi.core.PhaseNoiseSimulator(frequencies, s_phase, extrapolation_mode=mode)
     time, phi = sim.generateNoise()
     
     # Perform Welch verification (using ensemble averaging logic for smoothness)

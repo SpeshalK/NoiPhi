@@ -1,50 +1,39 @@
 """
-Ramsey_fringe_demo.py
+Rabi_Oscill_Phase_Noisy.py
 
-Demonstrates the decay of Ramsey fringe contrast due to laser phase noise,
-and directly connects the simulation result to the Integrated Phase Noise
-(IPN) computed analytically from the input PSD.
+Demonstrates the impact of laser phase noise on single-atom Rabi oscillations
+using an ensemble of independent noise trajectories, directly comparable to
+what is measured in a real Rydberg experiment.
 
-SEQUENCE:
-    1. Ideal pi/2 pulse  — rotates Bloch vector to equator
-    2. Free precession   — duration T, laser phase noise accumulates
-    3. Ideal pi/2 pulse  — maps accumulated phase to population
-    4. Measure P_e       — averaged over ensemble gives fringe contrast C(T)
+PHYSICS:
+    A two-level atom is driven by a laser with Rabi frequency Omega. In the
+    ideal case the population oscillates coherently between ground and excited
+    states at frequency Omega. When the laser carries phase noise phi(t), the
+    drive term acquires a stochastic phase:
 
-ANALYTIC LINK:
-    For a noisy free precession with zero mean phase, the ensemble-averaged
-    contrast decays as:
+        H(t) = (Omega/2) * (exp(i*phi(t)) * sigma_+ + exp(-i*phi(t)) * sigma_-)
 
-        C(T) = exp( -sigma^2_phi(T) / 2 )
+    Each noise realisation produces a slightly different trajectory. Averaging
+    over the ensemble recovers the experimentally observed signal, where
+    coherent oscillations are progressively washed out by dephasing — producing
+    a decaying envelope on top of the Rabi oscillations.
 
-    where sigma^2_phi(T) is the variance of the phase increment Delta_phi(T)
-    = phi(T) - phi(0), obtained by integrating the phase PSD from high
-    frequency down to 1/T:
+OUTPUT:
+    - Individual noisy trajectories in faint blue (single shots)
+    - Noiseless reference in black dashed
+    - Ensemble mean <P_e(t)> in bold red with ±1σ band
+    - Noise-induced deviation panel below
 
-        sigma^2_phi(T) = 2 * integral_{1/T}^{f_max} S_phi(f) df
-
-    This is exactly what noiphi.analysis_tools.integrated_phase_noise
-    computes (cumulatively from high frequency downward), so the IPN curve
-    evaluated at f = 1/T gives the analytic contrast prediction directly.
-
-KEY IMPLEMENTATION NOTE — long trajectory approach:
-    TK95 generates a stationary process, so any single sample phi[k] is
-    drawn from the same marginal distribution regardless of k. This means
-    phi[-1] alone carries no information about the dark time T.
-
-    The physically correct quantity is the phase INCREMENT:
-        Delta_phi(T) = phi[n_T] - phi[0]
-    whose variance genuinely grows with T as noise accumulates.
-
-    We therefore generate n_trajs long trajectories upfront (spanning the
-    full T sweep range) and index into them at each T value. This is also
-    faster — trajectories are generated once, not once per T point.
+CONNECTION TO IPN:
+    The dephasing rate is set by the integrated phase noise (IPN) of the laser.
+    High-frequency servo bumps near 1 MHz (visible in the IPN from
+    noise_analysis.py) are the primary contributors — they accumulate phase
+    error on the timescale of a single Rabi cycle, directly limiting coherence.
 
 DATA:
     950nm_freqNoise_blueENHANCED.csv — frequency noise PSD (Hz^2/Hz)
     Frequency range: ~32 kHz to ~3.9 MHz
 """
-
 import numpy as np
 import matplotlib.pyplot as plt
 from scipy.linalg import expm
@@ -107,7 +96,7 @@ U_pi2     = expm(-1j * H_pulse * n_pulse * dt_pulse)
 # for any T in the sweep via simple indexing. zero_offset=False so
 # that phi[0] is a free random variable and increments are physical.
 print(f"Generating {n_trajs} trajectories of length {n_long} samples ({T_max*1e6:.0f} us)...")
-sim = noiphi.core.NoiseSimulator(f, s_phase, dt=dt_free, n_samples=n_long,
+sim = noiphi.core.PhaseNoiseSimulator(f, s_phase, dt=dt_free, n_samples=n_long,
                                   zero_offset=False)
 long_trajs = []
 for i in range(n_trajs):

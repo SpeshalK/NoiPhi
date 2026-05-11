@@ -7,7 +7,7 @@ trajectories to recover the experimentally measured average signal.
 
 Note on trajectory count:
     The many-body Hilbert space scales as 2^N, making each expm_multiply
-    call significantly more expensive than the single-qubit case. n_trajs=10
+    call significantly more expensive than the single-qubit case. n_trajs550
     is a practical default for a demo; increase cautiously for larger N.
 
 OUTPUT:
@@ -44,7 +44,7 @@ H_clean         = H_static + H_dynamic_clean   # Constant — compute once
 data = np.genfromtxt('../data/950nm_freqNoise_blueENHANCED.csv', delimiter=',')
 f, s_freq = data[:, 0], data[:, 1]
 s_phase = noiphi.conversion_tools.frequency_to_phase_psd(f, s_freq)
-sim = noiphi.core.NoiseSimulator(f, s_phase, dt=dt, n_samples=n_steps)
+sim = noiphi.core.PhaseNoiseSimulator(f, s_phase, dt=dt, n_samples=n_steps)
 
 # -- 4. Noiseless Reference --
 state_ref = np.zeros(2**N, dtype=complex)
@@ -85,7 +85,7 @@ for i in range(n_trajs):
     ax1.plot(t_us, all_probs[i], color='steelblue', alpha=0.2, linewidth=0.7)
 
 ax1.plot(t_us, probs_ref,     color='black',   linewidth=1.2, linestyle='--', label='Noiseless')
-ax1.plot(t_us, ensemble_mean, color='tab:red', linewidth=1.8, label=f'Ensemble mean (N\u209c\u1d63\u2c7c={n_trajs})')
+ax1.plot(t_us, ensemble_mean, color='tab:red', linewidth=1.8, label=f'Ensemble mean (N_traj={n_trajs})')
 ax1.fill_between(t_us,
                  ensemble_mean - ensemble_std,
                  ensemble_mean + ensemble_std,

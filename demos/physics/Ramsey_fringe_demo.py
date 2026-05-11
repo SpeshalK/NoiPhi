@@ -93,7 +93,7 @@ U_pi2     = expm(-1j * H_pulse * n_pulse * dt_pulse)
 # extrapolation_mode='decay': physically motivated 1/f^2 roll-off below 32 kHz.
 print(f"Generating {n_trajs} trajectories ({n_long} samples, "
       f"{n_long * dt_free * 1e6:.0f} us)...")
-sim = noiphi.core.NoiseSimulator(f, s_phase, dt=dt_free, n_samples=n_long,
+sim = noiphi.core.PhaseNoiseSimulator(f, s_phase, dt=dt_free, n_samples=n_long,
                                   zero_offset=False, extrapolation_mode='decay')
 long_trajs = []
 for i in range(n_trajs):
