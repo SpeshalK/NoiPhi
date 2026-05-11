@@ -12,7 +12,7 @@ While many libraries focus on theoretical power-law noise (e.g., $1/f^α$), NoiP
 
 - Data-Driven Accuracy: Preserves the unique "knees" and noise floors of your specific hardware using log-log interpolation of experimental data.  
 
-- Physics-Aware Extrapolation: Allows user to choose how to handle high-frequency roll-off beyond your measurement rangei (e.g., Kohlrausch decay), preventing unphysical artifacts.  
+- Physics-Aware Extrapolation: Allows user to choose how to handle high-frequency roll-off beyond your measurement range (e.g., Kohlrausch decay), preventing unphysical artifacts.  
 
 
 - Lightweight & Composable: Optimized for photonics and quantum optics labs, designed to generate noise signals that represent a target spectrum and are easily integrated into larger simulation pipelines.
@@ -56,7 +56,7 @@ NoiPhi is designed to be lightweight, relying on the standard Python scientific 
 | **Python** | Base Language | `3.8+` |
 | **NumPy** | FFT operations and array manipulation | `1.20+` |
 | **SciPy** | Log-log interpolation of experimental PSDs | `1.7+` |
-| **Matplotlib** | Noise visualization and demo plotting[cite: 3] | `3.4+` |
+| **Matplotlib** | Noise visualization and demo plotting | `3.4+` |
 
 > **Note:** For a complete list of specific sub-dependencies, please see the [pyproject.toml](pyproject.toml) file.
 
@@ -71,7 +71,7 @@ import noiphi
 frequencies = np.logspace(1, 6, 1000)
 psd = 1e-10 / frequencies
 
-sim = noiphi.core.NoiseSimulator(frequencies, psd, dt=1e-6, n_samples=10_000)
+sim = noiphi.core.PhaseNoiseSimulator(frequencies, psd, dt=1e-6, n_samples=10_000)
 t, phi = sim.generateNoise()
 ```
 

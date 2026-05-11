@@ -5,8 +5,8 @@ authors:
   given-names: "Tomas"
 title: "NoiPhi: A stochastic noise simulation kit for quantum and photonic systems"
 version: 0.1.0
-date-released: 2026-04-28
-url: "https://github.com/your-username/noiphi"
+date-released: 2026-05-09
+url: "https://github.com/SpeshalK/noiphi"
 keywords:
   - quantum noise simulation
   - laser noise

@@ -1,6 +1,6 @@
 [build-system]
 requires = ["setuptools>=61.0"]
-build-backend = "setuptools.backends.legacy:build"
+build-backend = "setuptools.build_meta"
 
 [project]
 name = "noiphi"
@@ -34,3 +34,6 @@ dependencies = [
 [project.urls]
 Repository = "https://github.com/SpeshalK/noiphi"
 "Bug Tracker" = "https://github.com/SpeshalK/noiphi/issues"
+
+[tool.setuptools.packages.find]
+where = ["src"]

@@ -12,7 +12,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 
 **Core**
-- `NoiseSimulator` class implementing the TK95 (Timmer & König, 1995) algorithm for generating stochastic time-domain noise trajectories from experimental PSDs
+- `PhaseNoiseSimulator` class implementing the TK95 (Timmer & König, 1995) algorithm for generating stochastic time-domain noise trajectories from experimental PSDs
 - Interpolated frequency grid (`f_linear_full`, `psd_linear_full`) pre-computed at construction time and available as instance attributes without requiring a `generateNoise()` call
 - `generateNoise()` method with optional `n_samples` and `dt` overrides for multi-scale sampling; default grid preserved on instance after override calls
 - `seed` parameter for reproducible noise generation via `numpy.random.default_rng`
