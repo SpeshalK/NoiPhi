@@ -6,7 +6,7 @@ def autocorrWK(phi):
 
     Parameters
     ----------
-   phi : array_like
+    phi : array_like
         The input time-domain signal (e.g., phase noise trajectory in radians).
         If the signal length is N, the FFT is performed on a zero-padded 
         length of 2N to avoid cyclic correlation artifacts.

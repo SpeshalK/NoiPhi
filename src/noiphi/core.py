@@ -7,7 +7,7 @@ DEFAULT_DT = 1e-8
 # Default to 100,000 samples (~1 ms of total time) 
 DEFAULT_N_SAMPLES = 100_000
 
-class NoiseSimulator:
+class PhaseNoiseSimulator:
     """
     High-level orchestrator class for generating laser noise trajectories.
 
@@ -207,5 +207,5 @@ def phasenoise_maker(frequencies, psd, dt=1e-6, n_samples=1000, **kwargs):
     """
     Functional wrapper for quick noise generation.
     """
-    sim = NoiseSimulator(frequencies, psd, dt=dt, n_samples=n_samples, **kwargs)
+    sim = PhaseNoiseSimulator(frequencies, psd, dt=dt, n_samples=n_samples, **kwargs)
     return sim.generateNoise()
