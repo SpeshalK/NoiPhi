@@ -24,6 +24,7 @@ sdist/
 
 # Test plot directories
 demos/usage/plots
+demos/physics/plots
 
 # Unit Testing
 .tox/
