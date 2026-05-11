@@ -37,3 +37,13 @@ Thumbs.db
 # *.csv
 # *.mat
 # *.dat
+# IDE settings
+.vscode/
+.idea/
+*.swp        # vim swap files (relevant given your earlier :w slip!)
+
+# Sphinx docs if you add them later
+docs/_build/
+
+# PyPI upload artifacts
+*.whl
