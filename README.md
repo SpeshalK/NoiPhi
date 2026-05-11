@@ -53,12 +53,12 @@ pip install -e .
 
 NoiPhi is designed to be lightweight, relying on the standard Python scientific stack to ensure easy integration into existing lab environments.
 
-| Library | Purpose | Min. Version |
-| :--- | :--- | :--- |
-| **Python** | Base Language | `3.8+` |
-| **NumPy** | FFT operations and array manipulation | `1.20+` |
-| **SciPy** | Log-log interpolation of experimental PSDs | `1.7+` |
-| **Matplotlib** | Noise visualization and demo plotting | `3.4+` |
+| Library | Purpose | Min. Version | Required |
+| :--- | :--- | :--- | :--- |
+| **Python** | Base Language | `3.8+` | Core |
+| **NumPy** | FFT operations and array manipulation | `1.20+` | Core |
+| **SciPy** | Log-log interpolation of experimental PSDs | `1.7+` | Core |
+| **Matplotlib** | Noise visualization and demo plotting | `3.4+` | Demos |
 
 > **Note:** For a complete list of specific sub-dependencies, please see the [pyproject.toml](pyproject.toml) file.
 
