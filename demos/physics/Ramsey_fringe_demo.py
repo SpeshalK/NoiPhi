@@ -57,10 +57,12 @@ from scipy.linalg import expm
 import noiphi
 
 plt.rcParams.update({
-    'font.size': 12,
-    'axes.titlesize': 14,
-    'axes.labelsize': 13,
-    'legend.fontsize': 11,
+    'font.size': 12,        
+    'axes.titlesize': 16,   
+    'axes.labelsize': 14,   
+    'xtick.labelsize': 14,  
+    'ytick.labelsize': 14,  
+    'legend.fontsize': 12,  
 })
 
 # -- 1. Load PSD and Build Phase Noise Spectrum --

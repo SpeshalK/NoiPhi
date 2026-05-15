@@ -23,6 +23,15 @@ from scipy.sparse.linalg import expm_multiply
 import noiphi
 from main_Rydbuild import buildRydHamil
 
+plt.rcParams.update({
+    'font.size': 12,        
+    'axes.titlesize': 16,   
+    'axes.labelsize': 14,   
+    'xtick.labelsize': 14,  
+    'ytick.labelsize': 14,  
+    'legend.fontsize': 12,  
+})
+
 # -- 1. Physical Parameters --
 N        = 4
 V_int    = 2 * np.pi * 0.0 * 1e6   # Interaction strength (rad/s)
