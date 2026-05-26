@@ -2,7 +2,7 @@ import numpy as np
 import scipy.fftpack as sc
 
 
-def generate_tk95_noise(fs,psd,rng):
+def generate_tk95_noise(df,psd,rng):
     """
     Low-level implementation of the TK95 noise generation algorithm.
 
@@ -34,16 +34,16 @@ def generate_tk95_noise(fs,psd,rng):
     Timmer, J. & König, M. (1995). On generating power law noise.
     Astronomy and Astrophysics, 300, 707-710.
     """
-    df = fs[-1] - fs[-2]
-    n  = len(fs)
-    half = int(n / 2 - 1)
+    n_half = len(psd)     
+    n_full = 2 * n_half   
+    half   = n_half - 1   
 
     real_parts = rng.normal(0.0, 1.0, half) * np.sqrt(psd[1:half+1] / 2)
     imag_parts = rng.normal(0.0, 1.0, half) * np.sqrt(psd[1:half+1] / 2)
-    
-    spectrum = np.zeros(n, dtype=complex)
+
+    spectrum = np.zeros(n_full, dtype=complex)
     spectrum[1:half+1]  = real_parts + 1j * imag_parts
-    spectrum[-(half):] = np.conjugate(spectrum[1:half+1])[::-1]
-    
-    phi = np.fft.fftshift(sc.ifft(spectrum)) * n * np.sqrt(2 * df).real
+    spectrum[-(half):]  = np.conjugate(spectrum[1:half+1])[::-1]
+
+    phi = sc.ifft(spectrum) * n_full * np.sqrt(df / 2)
     return phi.real
