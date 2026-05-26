@@ -31,9 +31,12 @@ plt.rcParams.update({
 })
 
 # -- 1. Load PSD and Initialise Simulator --
+
+# Blue laser
 data = np.genfromtxt('../data/950nm_freqNoise_blueENHANCED.csv', delimiter=',')
 f, s_freq = data[:, 0], data[:, 1]
 s_phase = noiphi.conversion_tools.frequency_to_phase_psd(f, s_freq)
+
 
 # 10ns resolution to capture the 1MHz servo bump; 5000 steps = 50μs
 dt       = 1e-8
@@ -64,6 +67,8 @@ all_probs = np.zeros((n_trajs, n_steps))
 
 for i in range(n_trajs):
     _, phi = sim.generateNoise()
+
+
     state  = np.array([1, 0], dtype=complex)
 
     for j, p in enumerate(phi):

@@ -50,10 +50,19 @@ H_dynamic_clean = (Omega / 2.0) * (Hx_plus + Hx_minus)
 H_clean         = H_static + H_dynamic_clean   # Constant — compute once
 
 # -- 3. Initialise Noise Simulator --
+
+#Blue laser
 data = np.genfromtxt('../data/950nm_freqNoise_blueENHANCED.csv', delimiter=',')
 f, s_freq = data[:, 0], data[:, 1]
-s_phase = noiphi.conversion_tools.frequency_to_phase_psd(f, s_freq)
-sim = noiphi.core.PhaseNoiseSimulator(f, s_phase, dt=dt, n_samples=n_steps)
+s_phase_blue = noiphi.conversion_tools.frequency_to_phase_psd(f, s_freq)
+sim_blueLaser = noiphi.core.PhaseNoiseSimulator(f, s_phase_blue, dt=dt, n_samples=n_steps)
+
+
+#Red laser
+data = np.genfromtxt('../data/795nm_freqNoise_red.csv', delimiter=',')
+f, s_freq = data[:, 0], data[:, 1]
+s_phase_red = noiphi.conversion_tools.frequency_to_phase_psd(f, s_freq)
+sim_redLaser = noiphi.core.PhaseNoiseSimulator(f, s_phase_red, dt=dt, n_samples=n_steps)
 
 # -- 4. Noiseless Reference --
 state_ref = np.zeros(2**N, dtype=complex)
@@ -69,7 +78,10 @@ all_probs = np.zeros((n_trajs, n_steps))
 
 for i in range(n_trajs):
     print(f"Trajectory {i+1}/{n_trajs}...")
-    _, phi = sim.generateNoise()
+    _, phi_R = sim_redLaser.generateNoise()
+    _, phi_B = sim_blueLaser.generateNoise()
+
+    phi=phi_R+phi_B
 
     state = np.zeros(2**N, dtype=complex)
     state[0] = 1.0
@@ -103,7 +115,7 @@ ax1.fill_between(t_us,
 ax1.set_ylabel(r'Ground State Population $|\langle 00...0 | \psi \rangle|^2$')
 ax1.set_title(f'Many-Body Ising Evolution: Global Phase Noise Impact ({N}-atom chain)')
 ax1.set_ylim(-0.05, 1.15)
-ax1.legend(loc='upper right')
+ax1.legend(loc='lower right')
 ax1.grid(True, alpha=0.3)
 
 # Bottom panel: noise-induced deviation
