@@ -57,6 +57,11 @@ sim = noiphi.core.PhaseNoiseSimulator(frequencies, s_phase,
 time, phi = sim.generateNoise()
 dt = sim.dt
 
+# Check phi is consistant with Parseval Thm.
+df= 1.0 / (sim.dt * sim.n_samples)
+print ('Variance of noise:', np.var(phi))
+print ('sum of PSD * df (integral):', np.sum(sim.psd_linear[:sim.n_samples]) * df)
+
 # -- 2. Stability Analysis --
 
 # Autocorrelation via Wiener-Khinchin theorem
@@ -69,10 +74,11 @@ taus, adev = noiphi.analysis_tools.AllanDev(phi, dt)
 # DC bin (index 0) is excluded because log(0) is undefined during
 # interpolation. The negative-frequency half is discarded as the PSD
 # is symmetric; only the positive side carries physical information.
-half_n  = len(sim.f_linear_full) // 2
-f_pos   = sim.f_linear_full[1:half_n]
-psd_pos = sim.psd_linear_full[1:half_n]
+half_n  = len(sim.f_linear) // 2
+f_pos   = sim.f_linear[1:half_n]
+psd_pos = sim.psd_linear[1:half_n]
 ipn_rms = noiphi.analysis_tools.integrated_phase_noise(f_pos, psd_pos)
+
 
 # -- 3. Plotting --
 fig, axes = plt.subplots(1, 3, figsize=(18, 5))
