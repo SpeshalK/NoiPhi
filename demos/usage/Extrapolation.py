@@ -48,8 +48,8 @@ for mode in modes:
         'phi': phi, 
         'f_welch': f_w, 
         's_welch': s_w / 4, # Physical normalization factor
-        'f_sampled': sim.f_linear_full,
-        'psd_sampled': sim.psd_linear_full
+        'f_sampled': sim.f_linear,
+        'psd_sampled': sim.psd_linear
     }
 
 # -- 3. Plotting --

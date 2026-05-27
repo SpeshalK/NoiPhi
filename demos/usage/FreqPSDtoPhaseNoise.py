@@ -71,8 +71,8 @@ _,phi3=laser_NoiseSim.generateNoise()
 phi_ensemble= np.array([phi1,phi2,phi3])
 
 #Get Linear freq grid and PSD that was used for sampling
-psd_sampled=laser_NoiseSim.psd_linear_full
-f_sampled=laser_NoiseSim.f_linear_full
+psd_sampled=laser_NoiseSim.psd_linear
+f_sampled=laser_NoiseSim.f_linear
 mask=f_sampled>0
 
 # -- Verification Logic --
