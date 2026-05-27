@@ -47,7 +47,7 @@ for mode in modes:
         'time': time, 
         'phi': phi, 
         'f_welch': f_w, 
-        's_welch': s_w / 4, # Physical normalization factor
+        's_welch': s_w,
         'f_sampled': sim.f_linear,
         'psd_sampled': sim.psd_linear
     }

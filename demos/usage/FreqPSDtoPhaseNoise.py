@@ -80,11 +80,6 @@ fs = 1.0 / laser_NoiseSim.dt
 f_welch, s_ensemble = welch(phi_ensemble, fs=fs, nperseg=laser_NoiseSim.n_samples // 8)
 s_welch=np.mean(s_ensemble,axis=0)
 
-# Normalize s_welch by a factor of 4:
-# 1. A factor of 2 accounts for Welch's single-sided folding (summing +/- freq power)
-# 2. A factor of 2 accounts for the internal variance normalization (sqrt(2*df)) in TK95
-s_welch/=2*2
-
 # -- Plotting (2x2 Grid) --
 fig, axs = plt.subplots(2, 2, figsize=(14, 10))
 ((ax1, ax2), (ax3, ax4)) = axs
