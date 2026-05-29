@@ -20,7 +20,7 @@ jobs:
     - name: Set up Python 3.10
       uses: actions/setup-python@v5
       with:
-        python-state: '3.10'
+        python-version: '3.10'
 
     # 3. Upgrade pip and install your required packages
     - name: Install dependencies
@@ -32,4 +32,4 @@ jobs:
     # 4. Run pytest
     - name: Run test suite with pytest
       run: |
-        pytest
+        python -m pytest
