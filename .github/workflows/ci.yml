@@ -28,7 +28,7 @@ jobs:
         python -m pip install --upgrade pip
         pip install pytest numpy scipy 
 
-    # 4. Fire up pytest just like you do on your own laptop!
+    # 4. Run pytest
     - name: Run test suite with pytest
       run: |
         pytest
