@@ -50,3 +50,41 @@ def test_double_and_discard_length_preservation(flat_mock_data):
     
     assert len(t) == requested_samples
     assert len(phi) == requested_samples
+
+def test_parsevals_theorem_variance_convergence(flat_mock_data):
+    """
+    Physics Check: Verify Parseval's theorem. The ensemble average variance 
+    of generated trajectories must converge to the integrated power of the linear PSD.
+    """
+    freqs, psd = flat_mock_data
+    sampleNum=1024
+    trajNum=200
+
+    sim=PhaseNoiseSimulator(freqs,psd,dt=1e-4,n_samples=sampleNum,seed=42,zero_offset=False)
+
+
+    # 1. Theoretical variance
+    expected_variance=np.sum(sim.psd_linear)*sim.df
+
+    # 2. Generated ensemble variance
+    generated_variances=np.zeros(trajNum)
+    
+    for p in range(trajNum):
+        _,phi=sim.generateNoise()
+        generated_variances[p]=np.var(phi)
+
+    ensemble_average_variance=np.mean(generated_variances)
+
+    # 4. Assert convergence using np.testing.assert_allclose
+    # With 200 trajectories, the statistical fluctuations clear up beautifully,
+    # allowing us to pass a tight relative tolerance (rtol) of 5%.
+    np.testing.assert_allclose(
+        ensemble_average_variance, 
+        expected_variance, 
+        rtol=0.05,
+        err_msg=f"Parseval variance mismatch! Expected {expected_variance}, got {ensemble_average_variance}"
+    )
+    
+
+
+
