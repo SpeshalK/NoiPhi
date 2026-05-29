@@ -57,7 +57,7 @@ sim = noiphi.core.PhaseNoiseSimulator(frequencies, s_phase,
 time, phi = sim.generateNoise()
 dt = sim.dt
 
-# Check phi is consistant with Parseval Thm.
+# Check phi is consistant with Parseval Thm. (True convrgence increases with ensemble over many trajecotries)
 df= 1.0 / (sim.dt * sim.n_samples)
 print ('Variance of noise:', np.var(phi))
 print ('sum of PSD * df (integral):', np.sum(sim.psd_linear[:sim.n_samples]) * df)

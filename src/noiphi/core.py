@@ -67,7 +67,7 @@ class PhaseNoiseSimulator:
         """
 
         if len(frequencies) != len(psd):
-            raise ValueError("Frequencies and PSD arrays must have the same length.")
+            raise ValueError("frequencies and psd arrays must have the same length.")
 
         self.frequencies = np.asarray(frequencies)
         self.psd         = np.asarray(psd)
