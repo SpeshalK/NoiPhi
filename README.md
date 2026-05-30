@@ -43,7 +43,7 @@ NoiPhi applies this approach to quantum simulation contexts, where accurate nois
 From source:
 
 ```bash
-git clone https://github.com/your-username/noiphi.git
+git clone https://github.com/SpeshalK/NoiPhi.git
 cd noiphi
 pip install -e .
 ```
@@ -129,6 +129,19 @@ The noise code in this software has been directly implemented in the following a
 > Kozlej, T & Pelegri, G & Pritchard, J.D & Daley, A.J. (2026) *Adiabatic state preparation and thermalization of simulated phase noise in a Rydberg spin Hamiltonian.* arXiv:2505.04595 
 
 > Dr. Tomas Kozlej (2026) *Laser Phase noise in Rydberg Atom Arrays.* PhD diss., University of Strathclyde.
+
+---
+
+## Testing
+
+NoiPhi uses [pytest](https://docs.pytest.org). To run the full test suite after installing from source:
+
+```bash
+pip install pytest
+pytest
+```
+
+The suite covers the core simulator (`PhaseNoiseSimulator`), all conversion tools, and the noise analysis toolkit, including physics-based checks (Parseval's theorem, Allan deviation scaling, PDH discriminator roll-off).
 
 ---
 

@@ -49,6 +49,34 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
+## [0.1.1] - 2026-05-30
+ 
+### Bug Fix
+ 
+**Noise**
+- `noise.py` — Fixing scaling of output noise signal φ replacing scalefactor np.sqrt(df*2) --> np.sqrt(df/2)
+             — Removing superfluous ifftshift
+            
+- `core.py`  — Implementing double and discard (frequency space) functionality to remove Fourier periodicity.
+             — Bug fixing double and discard functionality to ensure user facing frequency grid consistancy.
+---
+
+## [0.1.2] - 2026-05-30
+ 
+### Added
+ 
+**Tests**
+- `tests/test_analysis.py` — full pytest suite for `analysis_tools`, covering `autocorrWK`, `AllanDev`, and `integrated_phase_noise` with normalisation, output shape, physics, and edge-case checks
+- `tests/test_core.py` — extended with coverage for all three extrapolation modes (`zero`, `floor`, `decay`), `generateNoise()` override parameters (`n_samples`, `dt`, combined), override immutability of the instance grid, and time axis correctness (origin, uniform spacing, end value)
+### Fixed
+ 
+**CI / packaging**
+- Corrected `pyproject.toml` package discovery from `where = ["."]` to `where = ["src"]` to match the `src/` layout, resolving `ModuleNotFoundError: No module named 'noiphi'` in clean CI environments
+- Added `[tool.pytest.ini_options] pythonpath = ["src"]` so pytest resolves the package without requiring an editable install
+- Updated GitHub Actions to Node.js 24 compatible versions: `actions/checkout@v4` → `v5`, `actions/setup-python@v5` → `v6`
+---
+
+
 ## [Unreleased]
 
 ### Planned
