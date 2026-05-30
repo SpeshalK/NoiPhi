@@ -36,5 +36,5 @@ Repository = "https://github.com/SpeshalK/noiphi"
 "Bug Tracker" = "https://github.com/SpeshalK/noiphi/issues"
 
 [tool.setuptools.packages.find]
-where = ["."]
+where = ["src"]
 include = ["noiphi*"]
