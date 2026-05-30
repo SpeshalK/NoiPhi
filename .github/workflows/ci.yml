@@ -14,11 +14,11 @@ jobs:
     steps:
     # 1. Clone your repository's code onto the GitHub virtual machine
     - name: Checkout code
-      uses: actions/checkout@v4
+      uses: actions/checkout@v5
 
     # 2. Install Python on the machine
     - name: Set up Python 3.12
-      uses: actions/setup-python@v5
+      uses: actions/setup-python@v6
       with:
         python-version: '3.12'
 
