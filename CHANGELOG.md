@@ -49,7 +49,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
-## [0.1.1] - 2026-05-30
+## [0.1.1] - 2026-05-20
  
 ### Bug Fix
  
@@ -64,6 +64,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [0.1.2] - 2026-05-30
  
 ### Added
+ 
+**CI**
+- `ci.yml` — GitHub Actions workflow that automatically runs the full pytest suite on every push and pull request to `main`, using `actions/checkout@v5` and `actions/setup-python@v6` (Node.js 24 compatible)
  
 **Tests**
 - `tests/test_analysis.py` — full pytest suite for `analysis_tools`, covering `autocorrWK`, `AllanDev`, and `integrated_phase_noise` with normalisation, output shape, physics, and edge-case checks
