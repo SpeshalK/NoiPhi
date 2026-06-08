@@ -5,7 +5,7 @@
 NoiPhi is a Python package for generating physically realistic noise trajectories from experimental power spectral densities (PSDs), based on the Timmer-König (TK95) algorithm. It was originally developed to simulate laser phase noise in quantum many-body systems, and is designed to grow into a general-purpose noise simulation toolkit.
 
 
-![Many-Body Ising Dynamics and Ramsey Contrast Decay](/home/slopo/Work/Projects/NoiPhi/demos/physics/plotsManyBodyIsing+Ramsey.jpg)
+
 ---
 ## Why NoiPhi?
 
