@@ -43,7 +43,7 @@ dt       = 1e-8
 n_steps  = 5000
 n_trajs  = 50        # Number of independent noise realisations
 
-sim = noiphi.core.PhaseNoiseSimulator(f, s_phase, dt=dt, n_samples=n_steps)
+sim = noiphi.core.NoiseSimulator(f, s_phase, dt=dt, n_samples=n_steps)
 time = np.arange(n_steps) * dt
 
 # -- 2. Physics Setup --

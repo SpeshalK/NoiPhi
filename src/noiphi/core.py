@@ -7,9 +7,9 @@ DEFAULT_DT = 1e-8
 # Default to 100,000 samples (~1 ms of total time) 
 DEFAULT_N_SAMPLES = 100_000
 
-class PhaseNoiseSimulator:
+class NoiseSimulator:
     """
-    High-level orchestrator class for generating laser noise trajectories.
+    High-level orchesteator class for generating laser phase noise trajectories.
 
     This class handles the interpolation of experimental PSD data onto a 
     linear frequency grid and manages the execution of the TK95 algorithm.
@@ -189,13 +189,12 @@ class PhaseNoiseSimulator:
         N     = n_samples if n_samples is not None else self.n_samples
         tstep = dt        if dt        is not None else self.dt
 
-        # Double-and-discard: TK95 is based on an IFFT, which implicitly assumes
-        # the signal is periodic over the window. This forces the trajectory to
-        # wrap back toward its starting value in the second half of the array,
-        # violating the non-Markovian diffusion expected of laser phase noise.
-        # Generating 2*N samples and returning only the first N ensures the
-        # wrap-back artefact is always discarded. FFT cost is O(N log N) so
-        # the 2x overhead is negligible for typical signal lengths.
+        # Double-and-discard: the IFFT assumes periodicity over the window,
+        # biasing the trajectory toward its starting value at the boundary.
+        # Generating 2*N and keeping the first N pushes this artefact out of
+        # the kept segment. Note: the underlying 2*N periodicity is not fully
+        # eliminated — this is a known TK95 limitation; AR/ARMA methods avoid
+        # it but are far less flexible with arbitrary experimental PSDs.
         N_internal  = 2 * N
         df_internal = 1.0 / (N_internal * tstep)
 
@@ -210,9 +209,9 @@ class PhaseNoiseSimulator:
         return t, phi
 
 
-def phasenoise_maker(frequencies, psd, dt=1e-6, n_samples=1000, **kwargs):
+def noise_maker(frequencies, psd, dt=1e-6, n_samples=1000, **kwargs):
     """
     Functional wrapper for quick noise generation.
     """
-    sim = PhaseNoiseSimulator(frequencies, psd, dt=dt, n_samples=n_samples, **kwargs)
+    sim = NoiseSimulator(frequencies, psd, dt=dt, n_samples=n_samples, **kwargs)
     return sim.generateNoise()

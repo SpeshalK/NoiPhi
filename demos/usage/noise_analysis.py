@@ -48,10 +48,10 @@ s_freq      = laserData[:, 1]
 
 s_phase = noiphi.conversion_tools.frequency_to_phase_psd(frequencies, s_freq)
 
-# PhaseNoiseSimulator pre-computes the interpolated grid at construction time.
+# NoiseSimulator pre-computes the interpolated grid at construction time.
 # f_linear_full and psd_linear_full are immediately available as instance
 # attributes without needing to call generateNoise() first.
-sim = noiphi.core.PhaseNoiseSimulator(frequencies, s_phase,
+sim = noiphi.core.NoiseSimulator(frequencies, s_phase,
                                        n_samples=2**17,
                                        extrapolation_mode='floor')
 time, phi = sim.generateNoise()

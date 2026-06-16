@@ -1,7 +1,7 @@
 """
 n_sampling_override.py
 
-Demonstrates the sampling feature of PhaseNoiseSimulator —
+Demonstrates the sampling feature of NoiseSimulator —
 the ability to generate noise trajectories at different time resolutions
 from a single initialised simulator instance.
 
@@ -36,7 +36,7 @@ f, s_freq = data[:, 0], data[:, 1]
 s_phase = noiphi.conversion_tools.frequency_to_phase_psd(f, s_freq)
 
 # Initialize ONCE with default settings
-sim = noiphi.core.PhaseNoiseSimulator(f, s_phase)
+sim = noiphi.core.NoiseSimulator(f, s_phase)
 
 # 2. OVERRIDE: The "Rabi" View (High resolution, short time)
 # We want to see the MHz servo bump clearly.
