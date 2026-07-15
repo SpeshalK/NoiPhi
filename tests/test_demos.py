@@ -84,6 +84,7 @@ def demos_sandbox(tmp_path_factory):
 # ── Smoke tests ─────────────────────────────────────────────────────────────
 
 
+@pytest.mark.demo
 def test_demo_scripts_were_discovered():
     """
     Sanity check on the discovery mechanism itself: if this ever returns
@@ -97,6 +98,7 @@ def test_demo_scripts_were_discovered():
     )
 
 
+@pytest.mark.demo
 @pytest.mark.parametrize("script", DEMO_SCRIPTS, ids=DEMO_IDS)
 def test_demo_runs_without_error(script, demos_sandbox):
     """Every demo script must execute to completion with exit status 0."""
