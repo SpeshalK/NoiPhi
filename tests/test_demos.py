@@ -23,7 +23,7 @@ import os
 import shutil
 import subprocess
 import sys
-from pathlib import Path
+from pathlib import Path # Clean way to work with paths.
 
 import pytest
 
