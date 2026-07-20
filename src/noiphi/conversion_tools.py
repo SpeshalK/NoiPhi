@@ -1,5 +1,7 @@
 import numpy as np
 
+#--------------------- PHASE NOISE ---------------------------------
+
 def frequency_to_phase_psd(frequencies, S_nu):
     """
     Converts a frequency noise PSD to a phase noise PSD.
@@ -137,31 +139,84 @@ def pdh_discriminator_slope(frequencies, k0, delta_f_fwhm):
     return k0 / np.sqrt(1 + 4 * (frequencies / delta_f_fwhm) ** 2)
 
 
-def dBc_to_phase_psd(L_dBc):
+#--------------------- AMPLITUDE NOISE ---------------------------------
+
+def rin_to_power_psd(rin, P0):
     """
-    Converts a single sideband phase noise level from dBc/Hz to linear units.
+    Converts a linear RIN spectrum to an absolute power noise PSD.
+ 
+    Uses the relation:
+ 
+        S_P(f) = RIN(f) * P0^2
+ 
+    Parameters
+    ----------
+    rin : array-like
+        Linear relative intensity noise (1/Hz).
+    P0 : float
+        Mean optical power (W).
+ 
+    Returns
+    -------
+    S_P : ndarray
+        Single-sided power noise PSD (W^2/Hz).
+    """
+    rin = np.asarray(rin, dtype=float)
+    return rin * P0 ** 2
 
-    The single sideband phase noise L(f) in dBc/Hz is defined as the noise
-    power spectral density relative to the carrier power. The conversion to
-    linear (rad^2/Hz) is:
 
+def rin_to_amplitude_psd(rin, P0):
+    """
+    Converts a linear RIN spectrum to an absolute amplitude noise PSD.
+ 
+    Uses the relation:
+ 
+        S_A(f) = sqrt(RIN(f)) * P0
+ 
+    Parameters
+    ----------
+    rin : array-like
+        Linear relative intensity noise (1/Hz).
+    P0 : float
+        Mean optical power (W).
+ 
+    Returns
+    -------
+    S_A : ndarray
+        Single-sided amplitude noise PSD (W/sqrt(Hz)).
+    """
+    rin = np.asarray(rin, dtype=float)
+    return np.sqrt(rin) * P0
+
+
+#--------------------- AMPLITUDE + PHASE NOISE ---------------------------------
+
+def dBc_to_linear(L_dBc):
+    """
+    Converts a noise level from dBc/Hz to linear units.
+ 
+    Uses the standard dB-to-linear relation:
+ 
         L_linear = 10^(L_dBc / 10)
-
+ 
     Parameters
     ----------
     L_dBc : array-like or float
-        Single sideband phase noise (dBc/Hz).
-
+        Noise level in dBc/Hz.
+ 
     Returns
     -------
     L_linear : ndarray or float
-        Phase noise in linear units (rad^2/Hz).
-
+        Linear noise level. Units depend on the measured quantity:
+        rad^2/Hz for single-sideband phase noise, 1/Hz for RIN.
+ 
     Notes
     -----
     For small phase noise (L_dBc << 0 dBc/Hz), L_linear ≈ S_phi(f) / 2.
     """
     return 10 ** (np.asarray(L_dBc, dtype=float) / 10)
+
+#--------------------- FUNCTIONALITY ---------------------------------
 
 def dBm_to_Voltage_psd(psd_dbm, rbw, impedance=50.0):
     """
@@ -197,6 +252,8 @@ def dBm_to_Voltage_psd(psd_dbm, rbw, impedance=50.0):
     s_v = (impedance * p_linear) / (1000.0 * rbw)
     
     return s_v
+
+
 
 def stitch_psds(f_low, s_low, f_high, s_high, transition_freq):
     """

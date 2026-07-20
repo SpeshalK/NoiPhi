@@ -9,13 +9,13 @@ DEFAULT_N_SAMPLES = 100_000
 
 class NoiseSimulator:
     """
-    High-level orchesteator class for generating laser phase noise trajectories.
+    High-level orchestrator class for generating laser phase/amplitude noise trajectories.
 
     This class handles the interpolation of experimental PSD data onto a 
     linear frequency grid and manages the execution of the TK95 algorithm.
 
     The generateNoise() method returns a unique time-domain phase noise
-    trajectory in units of radians.
+    trajectory for which the units match teh suqare root of the input PSD units.
 
     The interpolated one-sided frequency grid (f_linear, psd_linear) is
     pre-computed at construction time at the default n_samples resolution
@@ -44,7 +44,8 @@ class NoiseSimulator:
         frequencies : array_like
             Input frequency axis (Hz) from experimental data.
         psd : array_like
-            Input Power Spectral Density (rad^2/Hz).
+            Input Power Spectral Density (units depend on noise type,
+            e.g. rad^2/Hz for phase noise, 1/Hz for RIN).
         dt : float
             Desired time step for the output trajectory (seconds).
         n_samples : int
@@ -56,7 +57,7 @@ class NoiseSimulator:
             Decay exponent (Kohlrausch) if extrapolation_mode='decay'.
             Preset to 2.0 for 1/f^2 decay.
         zero_offset : bool
-            If True, shifts the trajectory so phi[0] = 0. Default is True.
+            If True, shifts the trajectory so the first sample is 0. Default is True.
         seed : int or None
             Seed for the random number generator. None (default) gives a
             different trajectory on each run. An integer gives fully
@@ -184,7 +185,7 @@ class NoiseSimulator:
         t : ndarray
             Time axis (seconds).
         phi : ndarray
-            Noise trajectory (radians).
+            Noise trajectory (units match the square root of the input PSD units).
         """
         N     = n_samples if n_samples is not None else self.n_samples
         tstep = dt        if dt        is not None else self.dt
