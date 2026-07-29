@@ -45,7 +45,7 @@ import noiphi
 
 # -- Input data --
 
-laserData = np.genfromtxt('../data/795nm_freqNoise_red.csv',dtype="f4,f4",delimiter=',',skip_header=8)
+laserData = np.genfromtxt('../data/Phase/795nm_freqNoise_red.csv',dtype="f4,f4",delimiter=',',skip_header=8)
 freq_raw=laserData['f0']
 s_freq_raw=laserData['f1']
 

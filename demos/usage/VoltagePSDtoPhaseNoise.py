@@ -37,8 +37,8 @@ RBW_LOW = 10.0       # Resolution Bandwidth for low-freq file (Hz)
 RBW_HIGH = 3000.0    # Resolution Bandwidth for high-freq file (Hz)
 
 # 1. Load Data (User-handled generalization)
-low_data = np.genfromtxt("../data/Diode918nm_VoltageNoise_lowfreq.csv", delimiter=',', skip_header=45)
-high_data = np.genfromtxt("../data/Diode918nm_VoltageNoise_highfreq.csv", delimiter=',', skip_header=45)
+low_data = np.genfromtxt("../data/Phase/Diode918nm_VoltageNoise_lowfreq.csv", delimiter=',', skip_header=45)
+high_data = np.genfromtxt("../data/Phase/Diode918nm_VoltageNoise_highfreq.csv", delimiter=',', skip_header=45)
 
 f_l, dbm_l = low_data[:, 0], low_data[:, 1]
 f_h, dbm_h = high_data[:, 0], high_data[:, 1]

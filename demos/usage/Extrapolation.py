@@ -19,7 +19,7 @@ import noiphi
 plt.rcParams.update({'font.size': 12, 'axes.titlesize': 16, 'axes.labelsize': 14})
 
 # -- 1. Load and Clean Data --
-laserData = np.genfromtxt('../data/795nm_freqNoise_red.csv', dtype="f4,f4", delimiter=',', skip_header=8)
+laserData = np.genfromtxt('../data/Phase/795nm_freqNoise_red.csv', dtype="f4,f4", delimiter=',', skip_header=8)
 # Apply 30kHz crop to remove instrumentation floor artifact
 mask = laserData['f0'] >= 30000
 frequencies = laserData['f0'][mask]

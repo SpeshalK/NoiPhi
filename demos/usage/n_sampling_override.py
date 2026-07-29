@@ -31,7 +31,7 @@ import matplotlib.pyplot as plt
 import noiphi
 
 # 1. Setup with experimental data 
-data = np.genfromtxt('../data/950nm_freqNoise_blueENHANCED.csv', delimiter=',', skip_header=8)
+data = np.genfromtxt('../data/Phase/950nm_freqNoise_blueENHANCED.csv', delimiter=',', skip_header=8)
 f, s_freq = data[:, 0], data[:, 1]
 s_phase = noiphi.conversion_tools.frequency_to_phase_psd(f, s_freq)
 

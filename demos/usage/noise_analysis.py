@@ -42,7 +42,7 @@ import matplotlib.pyplot as plt
 import noiphi
 
 # -- 1. Load Experimental Data and Simulate Noise --
-laserData = np.genfromtxt('../data/950nm_freqNoise_blueENHANCED.csv', delimiter=',')
+laserData = np.genfromtxt('../data/Phase/950nm_freqNoise_blueENHANCED.csv', delimiter=',')
 frequencies = laserData[:, 0]
 s_freq      = laserData[:, 1]
 

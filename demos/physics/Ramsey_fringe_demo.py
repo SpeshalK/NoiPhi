@@ -66,7 +66,7 @@ plt.rcParams.update({
 })
 
 # -- 1. Load PSD and Build Phase Noise Spectrum --
-data = np.genfromtxt('../data/950nm_freqNoise_blueENHANCED.csv', delimiter=',')
+data = np.genfromtxt('../data/Phase/950nm_freqNoise_blueENHANCED.csv', delimiter=',')
 f, s_freq = data[:, 0], data[:, 1]
 s_phase = noiphi.conversion_tools.frequency_to_phase_psd(f, s_freq)
 

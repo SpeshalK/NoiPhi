@@ -52,14 +52,14 @@ H_clean         = H_static + H_dynamic_clean   # Constant — compute once
 # -- 3. Initialise Noise Simulator --
 
 #Blue laser
-data = np.genfromtxt('../data/950nm_freqNoise_blueENHANCED.csv', delimiter=',')
+data = np.genfromtxt('../data/Phase/950nm_freqNoise_blueENHANCED.csv', delimiter=',')
 f, s_freq = data[:, 0], data[:, 1]
 s_phase_blue = noiphi.conversion_tools.frequency_to_phase_psd(f, s_freq)
 sim_blueLaser = noiphi.core.NoiseSimulator(f, s_phase_blue, dt=dt, n_samples=n_steps)
 
 
 #Red laser
-data = np.genfromtxt('../data/795nm_freqNoise_red.csv', delimiter=',')
+data = np.genfromtxt('../data/Phase/795nm_freqNoise_red.csv', delimiter=',')
 f, s_freq = data[:, 0], data[:, 1]
 s_phase_red = noiphi.conversion_tools.frequency_to_phase_psd(f, s_freq)
 sim_redLaser = noiphi.core.NoiseSimulator(f, s_phase_red, dt=dt, n_samples=n_steps)
