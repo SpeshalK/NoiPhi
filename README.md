@@ -74,7 +74,7 @@ import noiphi
 frequencies = np.logspace(1, 6, 1000)
 psd = 1e-10 / frequencies
 
-sim = noiphi.core.PhaseNoiseSimulator(frequencies, psd, dt=1e-6, n_samples=10_000)
+sim = noiphi.core.NoiseSimulator(frequencies, psd, dt=1e-6, n_samples=10_000)
 t, phi = sim.generateNoise()
 ```
 
@@ -142,7 +142,7 @@ pip install pytest
 pytest
 ```
 
-The suite covers the core simulator (`PhaseNoiseSimulator`), all conversion tools, and the noise analysis toolkit, including physics-based checks (Parseval's theorem, Allan deviation scaling, PDH discriminator roll-off).
+The suite covers the core simulator (`NoiseSimulator`), all conversion tools, and the noise analysis toolkit, including physics-based checks (Parseval's theorem, Allan deviation scaling, PDH discriminator roll-off).
 
 ---
 
