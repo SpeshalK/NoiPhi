@@ -140,3 +140,39 @@ def integrated_phase_noise(frequencies, psd):
     
     # Return RMS value (sqrt of variance)
     return np.sqrt(integrated_variance)
+
+
+def integrated_rin(frequencies, rin):
+    """
+    Computes the cumulative integrated RIN from a linear RIN spectrum.
+ 
+    Integrates the RIN PSD from the highest frequency down to each point,
+    returning the RMS fractional intensity noise as a function of bandwidth.
+ 
+    Parameters
+    ----------
+    frequencies : array_like
+        Frequency axis in Hz (positive values only).
+    rin : array_like
+        Linear relative intensity noise PSD (1/Hz).
+ 
+    Returns
+    -------
+    irin_rms : ndarray
+        RMS fractional intensity noise (dimensionless) integrated from
+        f_max down to f.
+    """
+    f = np.asarray(frequencies)
+    s = np.asarray(rin)
+ 
+    df = np.diff(f)
+ 
+    # Trapezoidal integration: (S1 + S2)/2 * df
+    segment_weights = (s[:-1] + s[1:]) / 2.0
+    area_segments   = segment_weights * df
+ 
+    # Integrate from highest frequency downwards
+    integrated_variance = np.zeros_like(f)
+    integrated_variance[:-1] = np.cumsum(area_segments[::-1])[::-1]
+ 
+    return np.sqrt(integrated_variance)
