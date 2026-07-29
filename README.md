@@ -106,7 +106,7 @@ The demo repository is organized to support a full showcase of the NoiPhi toolki
 - [x] Edge case handling (set frequencies out of data-range to zero/constant/decay)
 - [x] Noise analysis tools (Autocorrelation, Allan Deviation, Cumulative Integrated Phase noise)
 - [x] Detailed demonstrations (usage,analysis,pysics)
-- [ ] Amplitude noise simulation
+- [x] Amplitude noise simulation
 - [ ] Utilities for fitting PSDs to experimental data
 - [ ] Support for non-Gaussian sampling methods
 - [ ] Generalised noise sources (magnetic field fluctuations, intensity noise, etc.)
