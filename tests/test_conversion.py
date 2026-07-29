@@ -3,7 +3,7 @@ import numpy as np
 from noiphi.conversion_tools import (
     frequency_to_phase_psd,
     phase_to_frequency_psd,
-    dBc_to_phase_psd,
+    dBc_to_linear,
     stitch_psds,
     dBm_to_Voltage_psd,
     pdh_discriminator_slope,
@@ -25,12 +25,12 @@ def test_frequency_and_phase_inversion():
     
     np.testing.assert_allclose(S_nu_recovered, mock_S_nu, rtol=1e-12)
 
-def test_dBc_to_phase_psd_scaling():
+def test_dBc_to_linear_scaling():
     """Verify standard logarithmic power ratio scaling to linear units."""
     # -30 dBc should convert to 10**(-3) = 0.001
-    assert dBc_to_phase_psd(-30.0) == pytest.approx(0.001, rel=1e-9)
+    assert dBc_to_linear(-30.0) == pytest.approx(0.001, rel=1e-9)
     # 0 dBc should convert to 10**(0) = 1.0
-    assert dBc_to_phase_psd(0.0) == pytest.approx(1.0, rel=1e-9)
+    assert dBc_to_linear(0.0) == pytest.approx(1.0, rel=1e-9)
 
 def test_stitch_psds_boundaries():
     """Verify that stitching masks eliminate overlaps without losing data boundaries."""

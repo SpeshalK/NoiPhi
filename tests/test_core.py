@@ -1,6 +1,6 @@
 import pytest
 import numpy as np
-from noiphi.core import PhaseNoiseSimulator
+from noiphi.core import NoiseSimulator
 
 @pytest.fixture
 def flat_mock_data():
@@ -13,8 +13,8 @@ def test_reproducibility_via_seed(flat_mock_data):
     """Ensure passing an integer seed produces identical stochastic trajectories."""
     freqs, psd = flat_mock_data
     
-    sim1 = PhaseNoiseSimulator(freqs, psd, dt=1e-4, n_samples=500, seed=42)
-    sim2 = PhaseNoiseSimulator(freqs, psd, dt=1e-4, n_samples=500, seed=42)
+    sim1 = NoiseSimulator(freqs, psd, dt=1e-4, n_samples=500, seed=42)
+    sim2 = NoiseSimulator(freqs, psd, dt=1e-4, n_samples=500, seed=42)
     
     _, phi1 = sim1.generateNoise()
     _, phi2 = sim2.generateNoise()
@@ -24,7 +24,7 @@ def test_reproducibility_via_seed(flat_mock_data):
 def test_zero_offset_behavior(flat_mock_data):
     """Verify the default constraint forces phi[0] == 0 tracking."""
     freqs, psd = flat_mock_data
-    sim = PhaseNoiseSimulator(freqs, psd, zero_offset=True)
+    sim = NoiseSimulator(freqs, psd, zero_offset=True)
     _, phi = sim.generateNoise()
     
     assert phi[0] == 0.0, "Trajectory did not anchor to origin point."
@@ -35,7 +35,7 @@ def test_mismatched_array_lengths():
     psd = np.array([1, 2])  # Length mismatch
     
     with pytest.raises(ValueError, match="arrays must have the same length"):
-        PhaseNoiseSimulator(freqs, psd)
+        NoiseSimulator(freqs, psd)
 
 def test_double_and_discard_length_preservation(flat_mock_data):
     """
@@ -45,7 +45,7 @@ def test_double_and_discard_length_preservation(flat_mock_data):
     freqs, psd = flat_mock_data
     requested_samples = 1234
     
-    sim = PhaseNoiseSimulator(freqs, psd, n_samples=requested_samples)
+    sim = NoiseSimulator(freqs, psd, n_samples=requested_samples)
     t, phi = sim.generateNoise()
     
     assert len(t) == requested_samples
@@ -60,7 +60,7 @@ def test_parsevals_theorem_variance_convergence(flat_mock_data):
     sampleNum=1024
     trajNum=200
 
-    sim=PhaseNoiseSimulator(freqs,psd,dt=1e-4,n_samples=sampleNum,seed=42,zero_offset=False)
+    sim=NoiseSimulator(freqs,psd,dt=1e-4,n_samples=sampleNum,seed=42,zero_offset=False)
 
 
     # 1. Theoretical variance
