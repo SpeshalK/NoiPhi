@@ -1,4 +1,5 @@
 # NoiPhi
+[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.24474604.svg)](https://doi.org/10.5281/zenodo.24474604)
 
 **Stochastic noise simulation kit for quantum and photonic systems.**
 
@@ -120,10 +121,26 @@ The demo repository is organized to support a full showcase of the NoiPhi toolki
 - [ ] Generalised noise sources (magnetic field fluctuations, intensity noise, etc.)
 
 ---
-
 ## Citations
 
-If you use NoiPhi in academic work, please also cite the original TK95 algorithm:
+If you use NoiPhi in academic work, please cite the software:
+
+> Kozlej, T. (2026). *NoiPhi: A stochastic noise simulation kit for quantum and photonic systems* (v0.2.0). Zenodo. https://doi.org/10.5281/zenodo.24474604
+
+```bibtex
+@software{kozlej_noiphi_2026,
+  author    = {Kozlej, Tomas},
+  title     = {NoiPhi: A stochastic noise simulation kit for quantum and photonic systems},
+  version   = {0.2.0},
+  year      = {2026},
+  month     = {11},
+  publisher = {Zenodo},
+  doi       = {10.5281/zenodo.24474604},
+  url       = {https://github.com/SpeshalK/NoiPhi}
+}
+```
+
+Please also cite the original TK95 algorithm:
 
 > Timmer, J. & König, M. (1995). *On generating power law noise.* Astronomy and Astrophysics, 300, 707–710.
 

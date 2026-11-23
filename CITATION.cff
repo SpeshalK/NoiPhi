@@ -1,12 +1,14 @@
 cff-version: 1.2.0
 message: "If you use this software, please cite it as below."
 authors:
-- family-names: "Kozlej"
-  given-names: "Tomas"
+-   family-names: "Kozlej"
+    given-names: "Tomas"
+    orcid: "https://orcid.org/0009-0000-1707-4979"
 title: "NoiPhi: A stochastic noise simulation kit for quantum and photonic systems"
 type: software
 abstract: "NoiPhi is a Python package for generating physically realistic noise trajectories from experimental power spectral densities (PSDs), based on the Timmer-König (TK95) algorithm. It simulates laser phase and amplitude noise for quantum many-body and photonic systems."
 version: 0.2.0
+doi: 10.5281/zenodo.24474604
 date-released: 2026-11-23
 url: "https://github.com/SpeshalK/NoiPhi"
 repository-code: "https://github.com/SpeshalK/NoiPhi"
