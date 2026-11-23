@@ -2,14 +2,14 @@
 amplitude_noise_analysis.py
 
 Demonstrates the noise analysis toolkit of NoiPhi applied to laser
-amplitude (intensity) noise. Where noise_analysis.py characterises phase
+amplitude (intensity) noise. Where phase_noise_analysis.py characterises phase
 noise for Rydberg experiments, this script quantifies the intensity
 fluctuations that drive Rabi-frequency noise and AC-Stark-shift dephasing.
 
 OBJECTIVES:
 1. Stochastic Simulation: Convert an experimental RIN spectrum (dBc/Hz)
-   into a linear amplitude noise PSD (W/sqrt(Hz)) and generate a
-   time-domain power-fluctuation trajectory delta_P(t).
+   into a power noise PSD (W^2/Hz) and generate a time-domain
+   power-fluctuation trajectory delta_P(t).
 
 2. Coherence Characterisation: Use the Wiener-Khinchin theorem to compute
    the autocorrelation function of the intensity fluctuations, revealing
@@ -48,9 +48,9 @@ laserData   = np.genfromtxt('../data/Amplitude/Nd_YAG_1064nm_RIN_dBc.csv', delim
 frequencies = laserData[:, 0]
 rin_dBc     = laserData[:, 1]
 
-# dBc/Hz -> linear RIN (1/Hz) -> amplitude noise PSD (W/sqrt(Hz))
+# dBc/Hz -> linear RIN (1/Hz) -> power noise PSD (W^2/Hz)
 rin_linear = noiphi.conversion_tools.dBc_to_linear(rin_dBc)
-s_amp      = noiphi.conversion_tools.rin_to_amplitude_psd(rin_linear, P0)
+s_amp      = noiphi.conversion_tools.rin_to_power_psd(rin_linear, P0)
 
 # NoiseSimulator pre-computes the interpolated grid at construction time.
 sim = noiphi.core.NoiseSimulator(frequencies, s_amp,
@@ -70,7 +70,7 @@ print('sum of PSD * df (integral):', np.sum(sim.psd_linear[:sim.n_samples]) * df
 r_tau = noiphi.analysis_tools.autocorrWK(phi)
 
 # Integrated RIN — positive frequencies only. DC bin (index 0) excluded.
-# The linear RIN spectrum (not the amplitude PSD) is integrated so the
+# The linear RIN spectrum (not the power PSD) is integrated so the
 # result is the dimensionless cumulative RMS fractional intensity noise.
 half_n     = len(sim.f_linear) // 2
 f_pos      = sim.f_linear[1:half_n]

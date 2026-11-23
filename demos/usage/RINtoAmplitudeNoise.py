@@ -13,9 +13,10 @@ KEY WORKFLOW FEATURES:
 1. dBc -> LINEAR: RIN measured on a spectrum analyser is logarithmic
    (dBc/Hz). dBc_to_linear() recovers the linear RIN spectrum (1/Hz).
 
-2. RIN -> AMPLITUDE PSD: rin_to_amplitude_psd() maps RIN (1/Hz) to an
-   absolute amplitude noise PSD (W/sqrt(Hz)) via sqrt(RIN)*P0, which is
-   what NoiseSimulator samples to produce a power-fluctuation trajectory.
+2. RIN -> POWER PSD: rin_to_power_psd() maps RIN (1/Hz) to an absolute
+   power noise PSD (W^2/Hz) via RIN*P0^2, which is what NoiseSimulator
+   samples to produce a power-fluctuation trajectory dP(t) in W.
+   (For field-amplitude noise, A = sqrt(P), use rin_to_amplitude_psd().)
 
 3. STATIONARY TRAJECTORY: amplitude noise does not diffuse, so the noise
    fluctuates about zero mean (DC bin zeroed) rather than random-walking
@@ -62,8 +63,8 @@ rin_dBc     = laserData[:, 1]
 # dBc/Hz -> linear RIN (1/Hz)
 rin_linear = noiphi.conversion_tools.dBc_to_linear(rin_dBc)
 
-# linear RIN -> amplitude noise PSD (W/sqrt(Hz))
-s_amp = noiphi.conversion_tools.rin_to_amplitude_psd(rin_linear, P0)
+# linear RIN -> power noise PSD (W^2/Hz)
+s_amp = noiphi.conversion_tools.rin_to_power_psd(rin_linear, P0)
 
 # Generate noise simulation (defaults: dt=1e-8, n_samples=100000)
 laser_NoiseSim = noiphi.core.NoiseSimulator(frequencies, s_amp)
@@ -99,11 +100,11 @@ ax1.grid(True, which='both', alpha=0.3)
 ax1.legend()
 
 # Plot 2: Amplitude noise PSD + standardized sampling grid
-ax2.loglog(frequencies, s_amp, label='Amplitude PSD (Input)', color='red', linestyle='--')
+ax2.loglog(frequencies, s_amp, label='Power noise PSD (Input)', color='red', linestyle='--')
 ax2.loglog(f_sampled[mask], psd_sampled[mask], label='Sampled PSD (standardized df + extrapolation)', color='black', linestyle='--')
-ax2.set_title("2. Target amplitude noise spectrum")
+ax2.set_title("2. Target power noise spectrum")
 ax2.set_xlabel("Frequency (Hz)")
-ax2.set_ylabel(r"$S_A(f)$ (W/$\sqrt{Hz}$)")
+ax2.set_ylabel(r"$S_P(f)$ (W$^2$/Hz)")
 ax2.set_xlim(f_sampled[1], f_sampled[-1])
 ax2.legend(loc='lower left')
 ax2.grid(True, which='both', alpha=0.3)
@@ -123,7 +124,7 @@ ax4.loglog(f_sampled[mask], psd_sampled[mask], 'k--', label='Sampled PSD', alpha
 ax4.loglog(f_welch, s_welch, color='tab:red', label='Noise periodogram (Welch)', alpha=0.7)
 ax4.set_title("4. PSD verification")
 ax4.set_xlabel("Frequency (Hz)")
-ax4.set_ylabel(r"W/$\sqrt{Hz}$")
+ax4.set_ylabel(r"$S_P(f)$ (W$^2$/Hz)")
 ax4.legend()
 ax4.grid(True, which='both', alpha=0.3)
 
