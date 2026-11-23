@@ -50,7 +50,7 @@ class NoiseSimulator:
     linear frequency grid and manages the execution of the TK95 algorithm.
 
     The generateNoise() method returns a unique time-domain phase noise
-    trajectory for which the units match teh suqare root of the input PSD units.
+    trajectory for which the units match the suqare root of the input PSD units.
 
     The interpolated one-sided frequency grid (f_linear, psd_linear) is
     pre-computed at construction time at the default n_samples resolution
