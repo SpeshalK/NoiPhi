@@ -186,7 +186,7 @@ def rin_to_amplitude_psd(rin, P0):
         Single-sided amplitude noise PSD (W/sqrt(Hz)).
     """
     rin = np.asarray(rin, dtype=float)
-    return np.sqrt(rin) * P0
+    return rin * P0 / 4
 
 
 #--------------------- AMPLITUDE + PHASE NOISE ---------------------------------
