@@ -85,6 +85,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 **Amplitude noise**
 - `NoiseSimulator` is now agnostic to the noise type: any one-sided PSD (phase, frequency, voltage, power, amplitude) produces a trajectory in the square root of the PSD units
+- `NoiseSimulator` now validates its inputs and raises `ValueError`/`TypeError` for malformed spectra, unknown extrapolation modes, and invalid `dt`, `n_samples` or `beta`
 - `rin_to_power_psd()` — converts linear RIN (1/Hz) to a power noise PSD (W²/Hz) via `RIN * P0²`, for power-fluctuation trajectories δP(t)
 - `rin_to_amplitude_psd()` — converts linear RIN (1/Hz) to a field-amplitude noise PSD (W/Hz) via `RIN * P0 / 4`, with A = √P
 - `integrated_rin()` — cumulative integrated RIN, giving RMS fractional intensity noise as a function of bandwidth

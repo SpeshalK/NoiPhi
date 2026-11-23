@@ -298,3 +298,104 @@ def test_time_axis_end_value(flat_mock_data):
     sim = NoiseSimulator(freqs, psd, dt=dt, n_samples=n)
     t, _ = sim.generateNoise()
     assert t[-1] == pytest.approx((n - 1) * dt, rel=1e-12)
+
+
+# ── Input Validation ─────────────────────────────────────────────────────────
+
+@pytest.mark.parametrize("frequencies, psd, message", [
+    ([100.0, 10.0, 1000.0],     [1.0, 1.0, 1.0],     "strictly increasing"),   # unsorted
+    ([10.0, 10.0, 1000.0],      [1.0, 1.0, 1.0],     "strictly increasing"),   # repeated point
+    ([0.0, 10.0, 100.0],        [1.0, 1.0, 1.0],     "strictly positive"),     # DC bin included
+    ([-10.0, 10.0, 100.0],      [1.0, 1.0, 1.0],     "strictly positive"),     # negative frequency
+    ([10.0, 100.0, 1000.0],     [1.0, 0.0, 1.0],     "strictly positive"),     # zero PSD
+    ([10.0, 100.0, 1000.0],     [1.0, -1.0, 1.0],    "strictly positive"),     # negative PSD
+    ([10.0, np.nan, 1000.0],    [1.0, 1.0, 1.0],     "NaN or infinite"),
+    ([10.0, 100.0, 1000.0],     [1.0, np.inf, 1.0],  "NaN or infinite"),
+    ([10.0],                    [1.0],               "at least two points"),
+    ([[10.0, 100.0]],           [[1.0, 1.0]],        "one-dimensional"),
+])
+def test_invalid_spectrum_raises(frequencies, psd, message):
+    """Malformed frequency/PSD data must be rejected rather than silently mis-sampled."""
+    with pytest.raises(ValueError, match=message):
+        NoiseSimulator(frequencies, psd)
+
+
+def test_non_numeric_spectrum_raises():
+    """Arrays that cannot be converted to floats are a type error."""
+    with pytest.raises(TypeError, match="numeric"):
+        NoiseSimulator(["a", "b", "c"], [1.0, 1.0, 1.0])
+
+
+def test_unknown_extrapolation_mode_raises(flat_mock_data):
+    """A misspelt mode must not fall through to 'floor'."""
+    freqs, psd = flat_mock_data
+    with pytest.raises(ValueError, match="extrapolation_mode"):
+        NoiseSimulator(freqs, psd, extrapolation_mode='flor')
+
+
+def test_extrapolation_mode_is_case_insensitive(flat_mock_data):
+    """Mode names are normalised to lower case, as before."""
+    freqs, psd = flat_mock_data
+    sim = NoiseSimulator(freqs, psd, extrapolation_mode='DECAY')
+    assert sim.extrapolation_mode == 'decay'
+
+
+@pytest.mark.parametrize("beta", [0.0, -2.0, np.nan, np.inf])
+def test_invalid_beta_raises_in_decay_mode(flat_mock_data, beta):
+    """A non-positive or non-finite exponent would not describe a decay."""
+    freqs, psd = flat_mock_data
+    with pytest.raises(ValueError, match="beta"):
+        NoiseSimulator(freqs, psd, extrapolation_mode='decay', beta=beta)
+
+
+def test_beta_is_ignored_outside_decay_mode(flat_mock_data):
+    """beta is unused by 'floor' and 'zero', so it is not validated there."""
+    freqs, psd = flat_mock_data
+    NoiseSimulator(freqs, psd, extrapolation_mode='floor', beta=-2.0)
+
+
+@pytest.mark.parametrize("dt", [0.0, -1e-6, np.nan, np.inf])
+def test_invalid_dt_raises(flat_mock_data, dt):
+    """dt must be positive and finite, at construction and as an override."""
+    freqs, psd = flat_mock_data
+    with pytest.raises(ValueError, match="dt"):
+        NoiseSimulator(freqs, psd, dt=dt)
+
+    sim = NoiseSimulator(freqs, psd, dt=1e-4, n_samples=500)
+    with pytest.raises(ValueError, match="dt"):
+        sim.generateNoise(dt=dt)
+
+
+@pytest.mark.parametrize("n_samples, error", [
+    (0,     ValueError),
+    (1,     ValueError),
+    (-10,   ValueError),
+    (500.0, TypeError),    # floats are rejected, even when integral
+    (True,  TypeError),
+    ("500", TypeError),
+])
+def test_invalid_n_samples_raises(flat_mock_data, n_samples, error):
+    """n_samples must be an integer >= 2, at construction and as an override."""
+    freqs, psd = flat_mock_data
+    with pytest.raises(error, match="n_samples"):
+        NoiseSimulator(freqs, psd, n_samples=n_samples)
+
+    sim = NoiseSimulator(freqs, psd, dt=1e-4, n_samples=500)
+    with pytest.raises(error, match="n_samples"):
+        sim.generateNoise(n_samples=n_samples)
+
+
+def test_non_numeric_dt_raises(flat_mock_data):
+    freqs, psd = flat_mock_data
+    with pytest.raises(TypeError, match="dt"):
+        # Deliberately the wrong type, so the type checker is silenced on this line.
+        NoiseSimulator(freqs, psd, dt="1e-6")  # pyright: ignore[reportArgumentType]
+
+
+def test_valid_input_types_are_accepted():
+    """Lists, integer arrays and NumPy integer n_samples are all legitimate input."""
+    # NumPy integers are accepted at runtime; the type checker only infers plain int.
+    sim = NoiseSimulator([10, 100, 1000], [1, 1, 1], dt=1e-4, n_samples=np.int64(64))  # pyright: ignore[reportArgumentType]
+    _, phi = sim.generateNoise()
+    assert len(phi) == 64
+    assert np.all(np.isfinite(phi))

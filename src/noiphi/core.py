@@ -1,11 +1,46 @@
 from .noise import generate_tk95_noise
 
+import math
+
 import numpy as np
 
 # Default to 10 ns (100 MHz sampling) to capture high-frequency phase jitters up to 50MHz (Nyquist sampling theorem)
 DEFAULT_DT = 1e-8  
 # Default to 100,000 samples (~1 ms of total time) 
 DEFAULT_N_SAMPLES = 100_000
+
+VALID_EXTRAPOLATION_MODES = ('zero', 'floor', 'decay')
+
+
+def _validate_dt(dt):
+    """Checks that dt is a positive, finite real number and returns it as a float."""
+    if isinstance(dt, (bool, np.bool_)) or not isinstance(dt, (int, float, np.integer, np.floating)):
+        raise TypeError(f"dt must be a real number, got {type(dt).__name__}.")
+    dt = float(dt)
+    if not math.isfinite(dt) or dt <= 0:
+        raise ValueError(f"dt must be positive and finite, got {dt}.")
+    return dt
+
+
+def _validate_n_samples(n_samples):
+    """Checks that n_samples is an integer >= 2 and returns it as an int."""
+    if isinstance(n_samples, (bool, np.bool_)) or not isinstance(n_samples, (int, np.integer)):
+        raise TypeError(f"n_samples must be an integer, got {type(n_samples).__name__}.")
+    n_samples = int(n_samples)
+    if n_samples < 2:
+        raise ValueError(f"n_samples must be at least 2, got {n_samples}.")
+    return n_samples
+
+
+def _validate_beta(beta):
+    """Checks that beta is a positive, finite real number and returns it as a float."""
+    if isinstance(beta, (bool, np.bool_)) or not isinstance(beta, (int, float, np.integer, np.floating)):
+        raise TypeError(f"beta must be a real number, got {type(beta).__name__}.")
+    beta = float(beta)
+    if not math.isfinite(beta) or beta <= 0:
+        raise ValueError(f"beta must be positive and finite for 'decay' extrapolation, got {beta}.")
+    return beta
+
 
 class NoiseSimulator:
     """
@@ -67,15 +102,52 @@ class NoiseSimulator:
             re-instantiate the simulator with the same seed.
         """
 
+        # -- Input validation --
+        # Everything below is checked up front because the failure modes are
+        # otherwise silent: np.interp returns nonsense for unsorted data, and
+        # the log-log interpolation turns non-positive values into NaN/-inf.
+        try:
+            frequencies = np.asarray(frequencies, dtype=float)
+            psd         = np.asarray(psd, dtype=float)
+        except (TypeError, ValueError) as err:
+            raise TypeError("frequencies and psd must be numeric arrays.") from err
+
+        if frequencies.ndim != 1 or psd.ndim != 1:
+            raise ValueError("frequencies and psd must be one-dimensional arrays.")
         if len(frequencies) != len(psd):
             raise ValueError("frequencies and psd arrays must have the same length.")
+        if len(frequencies) < 2:
+            raise ValueError("frequencies and psd must contain at least two points.")
+        if not (np.all(np.isfinite(frequencies)) and np.all(np.isfinite(psd))):
+            raise ValueError("frequencies and psd must not contain NaN or infinite values.")
+        if np.any(frequencies <= 0):
+            raise ValueError("frequencies must be strictly positive (remove the DC bin); "
+                             "the PSD is interpolated in log-log space.")
+        if np.any(np.diff(frequencies) <= 0):
+            raise ValueError("frequencies must be strictly increasing.")
+        if np.any(psd <= 0):
+            raise ValueError("psd values must be strictly positive; "
+                             "the PSD is interpolated in log-log space.")
 
-        self.frequencies = np.asarray(frequencies)
-        self.psd         = np.asarray(psd)
+        if not isinstance(extrapolation_mode, str):
+            raise TypeError("extrapolation_mode must be a string.")
+        extrapolation_mode = extrapolation_mode.lower()
+        if extrapolation_mode not in VALID_EXTRAPOLATION_MODES:
+            raise ValueError(f"extrapolation_mode must be one of {VALID_EXTRAPOLATION_MODES}, "
+                             f"got '{extrapolation_mode}'.")
+
+        if extrapolation_mode == 'decay':
+            beta = _validate_beta(beta)
+
+        dt        = _validate_dt(dt)
+        n_samples = _validate_n_samples(n_samples)
+
+        self.frequencies = frequencies
+        self.psd         = psd
         self.dt          = dt
         self.n_samples   = n_samples
 
-        self.extrapolation_mode = extrapolation_mode.lower()
+        self.extrapolation_mode = extrapolation_mode
         self.beta        = beta
         self.zero_offset = zero_offset
 
@@ -187,8 +259,8 @@ class NoiseSimulator:
         phi : ndarray
             Noise trajectory (units match the square root of the input PSD units).
         """
-        N     = n_samples if n_samples is not None else self.n_samples
-        tstep = dt        if dt        is not None else self.dt
+        N     = _validate_n_samples(n_samples) if n_samples is not None else self.n_samples
+        tstep = _validate_dt(dt)               if dt        is not None else self.dt
 
         # Double-and-discard: the IFFT assumes periodicity over the window,
         # biasing the trajectory toward its starting value at the boundary.
