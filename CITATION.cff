@@ -4,13 +4,17 @@ authors:
 - family-names: "Kozlej"
   given-names: "Tomas"
 title: "NoiPhi: A stochastic noise simulation kit for quantum and photonic systems"
-version: 0.1.0
-date-released: 2026-05-09
-url: "https://github.com/SpeshalK/noiphi"
+type: software
+abstract: "NoiPhi is a Python package for generating physically realistic noise trajectories from experimental power spectral densities (PSDs), based on the Timmer-König (TK95) algorithm. It simulates laser phase and amplitude noise for quantum many-body and photonic systems."
+version: 0.2.0
+date-released: 2026-11-23
+url: "https://github.com/SpeshalK/NoiPhi"
+repository-code: "https://github.com/SpeshalK/NoiPhi"
 keywords:
   - quantum noise simulation
   - laser noise
   - phase noise
+  - amplitude noise
   - TK95 algorithm
   - photonics
 license: BSD-3-Clause

@@ -6,8 +6,8 @@ We actively support and provide security updates for the current major release b
 
 | Version | Supported |
 | :--- | :--- |
-| v0.1.x | ✅ Yes |
-| < v0.1.0 | ❌ No |
+| v0.2.x | ✅ Yes |
+| < v0.2.0 | ❌ No |
 
 ## Reporting a Vulnerability
 

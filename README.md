@@ -25,8 +25,10 @@ While many libraries focus on theoretical power-law noise (e.g., $1/f^α$), NoiP
 - Gaussian noise generation from arbitrary experimental PSDs using the TK95 algorithm
 - Tools for conversion and standardization of experimental laser noise PSD data in Voltage, frequency, and phase. 
 - Laser phase noise simulation for quantum many-body and photonic systems
+- Laser amplitude (intensity) noise simulation from experimental RIN spectra
+- Input validation with clear errors for malformed spectra and sampling parameters
 - Clean, composable API suitable for integration into larger simulation pipelines
-- Designed for extensibility (amplitude noise and generalised noise sources planned)
+- Designed for extensibility (generalised noise sources planned)
 - Relevant demonstrations to show standard use cases
 
 ---
@@ -45,8 +47,14 @@ From source:
 
 ```bash
 git clone https://github.com/SpeshalK/NoiPhi.git
-cd noiphi
+cd NoiPhi
 pip install -e .
+```
+
+To run the demonstration scripts, which need Matplotlib for plotting, install the `demos` extra instead:
+
+```bash
+pip install -e ".[demos]"
 ```
 
 ---
@@ -58,7 +66,7 @@ NoiPhi is designed to be lightweight, relying on the standard Python scientific 
 | :--- | :--- | :--- | :--- |
 | **Python** | Base Language | `3.8+` | Core |
 | **NumPy** | FFT operations and array manipulation | `1.20+` | Core |
-| **SciPy** | Log-log interpolation of experimental PSDs | `1.7+` | Core |
+| **SciPy** | Inverse FFT in the TK95 generator; Welch estimates in demos | `1.7+` | Core |
 | **Matplotlib** | Noise visualization and demo plotting | `3.4+` | Demos |
 
 > **Note:** For a complete list of specific sub-dependencies, please see the [pyproject.toml](pyproject.toml) file.
@@ -105,7 +113,7 @@ The demo repository is organized to support a full showcase of the NoiPhi toolki
 - [x] Laser phase noise via TK95 Gaussian sampling
 - [x] Edge case handling (set frequencies out of data-range to zero/constant/decay)
 - [x] Noise analysis tools (Autocorrelation, Allan Deviation, Cumulative Integrated Phase noise)
-- [x] Detailed demonstrations (usage,analysis,pysics)
+- [x] Detailed demonstrations (usage, analysis, physics)
 - [x] Amplitude noise simulation
 - [ ] Utilities for fitting PSDs to experimental data
 - [ ] Support for non-Gaussian sampling methods
@@ -138,8 +146,14 @@ The noise code in this software has been directly implemented in the following a
 NoiPhi uses [pytest](https://docs.pytest.org). To run the full test suite after installing from source:
 
 ```bash
-pip install pytest
+pip install -e ".[dev]"
 pytest
+```
+
+The demo scripts are smoke-tested separately (slower, ~30 s; needs Matplotlib, which the `dev` extra installs):
+
+```bash
+pytest -m demo
 ```
 
 The suite covers the core simulator (`NoiseSimulator`), all conversion tools, and the noise analysis toolkit, including physics-based checks (Parseval's theorem, Allan deviation scaling, PDH discriminator roll-off).

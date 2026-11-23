@@ -4,21 +4,24 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "noiphi"
-version = "0.1.2"
+version = "0.2.0"
 authors = [
   { name="Tomas Kozlej", email="tomaskoztwo@gmail.com" },
 ]
-description = "A stochastic phase noise simulator using the TK95 algorithm, designed for quantum and photonic systems."
+description = "A stochastic laser noise simulator (phase and amplitude) using the TK95 algorithm, designed for quantum and photonic systems."
 readme = "README.md"
 license = { file = "LICENSE" }
 requires-python = ">=3.8"
-keywords = ["laser", "phase noise", "quantum", "TK95", "Rydberg", "noise simulation", "photonics"]
+keywords = ["laser", "phase noise", "amplitude noise", "RIN", "quantum", "TK95", "Rydberg", "noise simulation", "photonics"]
 classifiers = [
     "Programming Language :: Python :: 3",
     "Programming Language :: Python :: 3.8",
     "Programming Language :: Python :: 3.9",
     "Programming Language :: Python :: 3.10",
     "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
+    "Programming Language :: Python :: 3.14",
     "License :: OSI Approved :: BSD Software License",
     "Operating System :: OS Independent",
     "Topic :: Scientific/Engineering :: Physics",
@@ -28,12 +31,16 @@ classifiers = [
 dependencies = [
     "numpy>=1.20",
     "scipy>=1.7",
-    "matplotlib>=3.4",
 ]
 
+[project.optional-dependencies]
+demos = ["matplotlib>=3.4"]
+dev = ["pytest", "matplotlib>=3.4"]
+
 [project.urls]
-Repository = "https://github.com/SpeshalK/noiphi"
-"Bug Tracker" = "https://github.com/SpeshalK/noiphi/issues"
+Repository = "https://github.com/SpeshalK/NoiPhi"
+"Bug Tracker" = "https://github.com/SpeshalK/NoiPhi/issues"
+Changelog = "https://github.com/SpeshalK/NoiPhi/blob/main/CHANGELOG.md"
 
 [tool.setuptools.packages.find]
 where = ["src"]

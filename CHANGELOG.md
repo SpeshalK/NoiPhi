@@ -79,13 +79,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Updated GitHub Actions to Node.js 24 compatible versions: `actions/checkout@v4` → `v5`, `actions/setup-python@v5` → `v6`
 ---
 
-## [0.2.0] - YYYY-MM-DD
+## [0.2.0] - 2026-11-23
 
 ### Added
 
 **Amplitude noise**
 - `NoiseSimulator` is now agnostic to the noise type: any one-sided PSD (phase, frequency, voltage, power, amplitude) produces a trajectory in the square root of the PSD units
-- `NoiseSimulator` now validates its inputs and raises `ValueError`/`TypeError` for malformed spectra, unknown extrapolation modes, and invalid `dt`, `n_samples` or `beta`
 - `rin_to_power_psd()` — converts linear RIN (1/Hz) to a power noise PSD (W²/Hz) via `RIN * P0²`, for power-fluctuation trajectories δP(t)
 - `rin_to_amplitude_psd()` — converts linear RIN (1/Hz) to a field-amplitude noise PSD (W/Hz) via `RIN * P0 / 4`, with A = √P
 - `integrated_rin()` — cumulative integrated RIN, giving RMS fractional intensity noise as a function of bandwidth
@@ -102,6 +101,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 **Project**
 - `CONTRIBUTING.md`, `SECURITY.md`, and GitHub issue templates
+- `dev` optional dependency group (`pip install -e ".[dev]"`) providing pytest and Matplotlib
 
 ### Changed
 
@@ -109,6 +109,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - `PhaseNoiseSimulator` renamed to `NoiseSimulator`
 - `phasenoise_maker()` renamed to `noise_maker()`
 - `dBc_to_phase_psd()` renamed to `dBc_to_linear()`
+
+**Core**
+- `NoiseSimulator` now validates its inputs and raises `ValueError`/`TypeError` for malformed spectra, unknown extrapolation modes, and invalid `dt`, `n_samples` or `beta`
+
+**Packaging**
+- Matplotlib is no longer a core dependency; it is only needed by the demo scripts and is installed via the new `demos` extra (`pip install -e ".[demos]"`)
 
 **Demonstrations**
 - Demo data split into `demos/data/Phase/` and `demos/data/Amplitude/`; all demo scripts updated to the new paths

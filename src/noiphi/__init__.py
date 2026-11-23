@@ -8,6 +8,6 @@ from . import conversion_tools
 from . import analysis_tools
 from .core import NoiseSimulator, noise_maker
 
-__version__ = "0.1.0"
+__version__ = "0.2.0"
 __author__ = "Tomas Kozlej"
 __email__ = "tomaskoztwo@gmail.com"

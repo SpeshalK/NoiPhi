@@ -37,9 +37,9 @@ To ensure the physics engines remain accurate and stable, this repository enforc
 Clone your fork and install the package locally in editable mode along with development dependencies:
 
 ```bash
-git clone [https://github.com/](https://github.com/)<your-username>/NoiPhi.git
+git clone https://github.com/<your-username>/NoiPhi.git
 cd NoiPhi
-pip install -e .[dev]
+pip install -e ".[dev]"
 ```
 
 ## Running the tests suite
