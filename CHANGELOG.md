@@ -79,11 +79,46 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Updated GitHub Actions to Node.js 24 compatible versions: `actions/checkout@v4` → `v5`, `actions/setup-python@v5` → `v6`
 ---
 
+## [0.2.0] - YYYY-MM-DD
+
+### Added
+
+**Amplitude noise**
+- `NoiseSimulator` is now agnostic to the noise type: any one-sided PSD (phase, frequency, voltage, power, amplitude) produces a trajectory in the square root of the PSD units
+- `rin_to_power_psd()` — converts linear RIN (1/Hz) to a power noise PSD (W²/Hz) via `RIN * P0²`, for power-fluctuation trajectories δP(t)
+- `rin_to_amplitude_psd()` — converts linear RIN (1/Hz) to a field-amplitude noise PSD (W/Hz) via `RIN * P0 / 4`, with A = √P
+- `integrated_rin()` — cumulative integrated RIN, giving RMS fractional intensity noise as a function of bandwidth
+
+**Demonstrations** (`usage/`)
+- `RINtoAmplitudeNoise.py` — full workflow from an experimental RIN spectrum (dBc/Hz) to a power-fluctuation trajectory, with PSD round-trip verification via Welch periodogram
+- `amplitude_noise_analysis.py` — autocorrelation and integrated RIN analysis of laser intensity noise
+- `demos/data/Amplitude/Nd_YAG_1064nm_RIN_dBc.csv` — synthetic 1064nm Nd:YAG RIN spectrum
+
+**Tests**
+- `tests/test_demos.py` — auto-discovers every demo script and smoke-tests it as a subprocess in a sandboxed copy of the demos tree
+- `pytest.ini` — `demo` marker; demo tests are excluded by default and run with `pytest -m demo`
+- `tests/test_conversion.py` — RIN conversion tests, including an end-to-end check of trajectory fractional RMS against the integrated RIN
+
+**Project**
+- `CONTRIBUTING.md`, `SECURITY.md`, and GitHub issue templates
+
+### Changed
+
+**Breaking**
+- `PhaseNoiseSimulator` renamed to `NoiseSimulator`
+- `phasenoise_maker()` renamed to `noise_maker()`
+- `dBc_to_phase_psd()` renamed to `dBc_to_linear()`
+
+**Demonstrations**
+- Demo data split into `demos/data/Phase/` and `demos/data/Amplitude/`; all demo scripts updated to the new paths
+- `noise_analysis.py` renamed to `phase_noise_analysis.py`
+
+---
+
 
 ## [Unreleased]
 
 ### Planned
-- Amplitude noise simulation
 - Utilities for fitting PSDs to experimental data
 - Support for non-Gaussian sampling methods
 - Generalised noise sources (magnetic field fluctuations, intensity noise, etc.)
