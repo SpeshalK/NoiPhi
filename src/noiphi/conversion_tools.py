@@ -164,29 +164,35 @@ def rin_to_power_psd(rin, P0):
     rin = np.asarray(rin, dtype=float)
     return rin * P0 ** 2
 
-
 def rin_to_amplitude_psd(rin, P0):
     """
-    Converts a linear RIN spectrum to an absolute amplitude noise PSD.
- 
-    Uses the relation:
- 
-        S_A(f) = sqrt(RIN(f)) * P0
- 
+    Converts a linear RIN spectrum to a field-amplitude noise PSD.
+
+    The field amplitude is defined through P = A^2, so A0 = sqrt(P0).
+    For small fluctuations dA/A0 = dP/(2*P0), which gives:
+
+        S_A(f) = RIN(f) * P0 / 4
+
+    The fractional amplitude noise PSD (e.g. for Rabi-frequency noise,
+    where Omega is proportional to A) is S_A / P0 = RIN / 4.
+
+    For a power-fluctuation trajectory dP(t), use rin_to_power_psd instead.
+
     Parameters
     ----------
     rin : array-like
         Linear relative intensity noise (1/Hz).
     P0 : float
         Mean optical power (W).
- 
+
     Returns
     -------
     S_A : ndarray
-        Single-sided amplitude noise PSD (W/sqrt(Hz)).
+        Single-sided amplitude noise PSD (W/Hz). A trajectory generated
+        from it has units of sqrt(W).
     """
     rin = np.asarray(rin, dtype=float)
-    return np.sqrt(rin) * P0
+    return rin * P0 / 4
 
 
 #--------------------- AMPLITUDE + PHASE NOISE ---------------------------------

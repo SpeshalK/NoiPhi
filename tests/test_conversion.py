@@ -7,8 +7,11 @@ from noiphi.conversion_tools import (
     stitch_psds,
     dBm_to_Voltage_psd,
     pdh_discriminator_slope,
-    voltage_to_phase_psd
+    voltage_to_phase_psd,
+    rin_to_power_psd,
+    rin_to_amplitude_psd
 )
+from noiphi.core import NoiseSimulator
 
 def test_frequency_and_phase_inversion():
     """
@@ -111,3 +114,55 @@ def test_voltage_to_phase_psd_transfer_function():
     )
     
     np.testing.assert_allclose(actual_s_phi, np.array([expected_s_phi]), rtol=1e-7)
+
+
+# --------------------------- RIN conversions ---------------------------
+
+def _mock_rin():
+    """Flicker + white RIN spectrum (1/Hz), ~0.57% integrated RMS."""
+    frequencies = np.logspace(1, 5.5, 400)
+    rin = 1e-10 * (1 + 1e3 / frequencies)
+    return frequencies, rin
+
+
+def test_rin_to_power_psd_scaling():
+    """S_P = RIN * P0^2 (W^2/Hz)."""
+    rin = np.array([1e-12, 1e-10])
+    np.testing.assert_allclose(rin_to_power_psd(rin, 0.5), rin * 0.25, rtol=1e-12)
+
+
+def test_rin_to_amplitude_psd_scaling():
+    """S_A = RIN * P0 / 4 (W/Hz), from A = sqrt(P)."""
+    rin = np.array([1e-12, 1e-10])
+    np.testing.assert_allclose(rin_to_amplitude_psd(rin, 0.5), rin * 0.125, rtol=1e-12)
+
+
+def test_amplitude_and_power_psd_consistency():
+    """dP = 2*A0*dA, so S_P must equal 4 * P0 * S_A."""
+    _, rin = _mock_rin()
+    P0 = 2.0
+    np.testing.assert_allclose(rin_to_power_psd(rin, P0),
+                               4 * P0 * rin_to_amplitude_psd(rin, P0), rtol=1e-12)
+
+
+@pytest.mark.parametrize("converter, mean_value, rms_factor", [
+    (rin_to_power_psd,     lambda P0: P0,          1.0),   # std(dP)/P0 = sqrt(int RIN)
+    (rin_to_amplitude_psd, lambda P0: np.sqrt(P0), 0.5),   # std(dA)/A0 = sqrt(int RIN)/2
+])
+def test_rin_trajectory_fractional_rms(converter, mean_value, rms_factor):
+    """
+    End-to-end check against a quantity that does not depend on the
+    converter: the fractional RMS of a generated trajectory must match
+    the integrated RIN. A Welch round-trip cannot catch a units error
+    here, because the simulator reproduces whatever PSD it is given.
+    """
+    frequencies, rin = _mock_rin()
+    P0 = 2.0
+    integrated_rin = np.sum(0.5 * (rin[1:] + rin[:-1]) * np.diff(frequencies))
+    expected = rms_factor * np.sqrt(integrated_rin)
+
+    sim = NoiseSimulator(frequencies, converter(rin, P0), dt=1e-6, n_samples=2**18,
+                         extrapolation_mode='zero', zero_offset=False, seed=1)
+    _, x = sim.generateNoise()
+
+    assert np.std(x) / mean_value(P0) == pytest.approx(expected, rel=0.03)
